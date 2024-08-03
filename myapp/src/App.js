@@ -9,7 +9,7 @@ function App() {
   const [data, setData] = useState("");
 
   const getData = async () => {
-    let newData = await axios.get("http://localhost:3000/up");
+    let newData = await axios.get(window.location.href + "/up");
     console.log(newData.data);
     setData(newData.data);
   }
