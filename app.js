@@ -24,7 +24,7 @@ app.get("/", function(req, res,){
 })
 
 app.get("/up", function(req, res,){
-  res.send("Yes I am up");
+  res.send("Yes I am up x2");
 })
 
 // catch 404 and forward to error handler
