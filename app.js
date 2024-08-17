@@ -4,6 +4,9 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const cors = require("cors");
+const sql = require("mssql");
+require("dotenv").config();
+const {connect} = require("./db.js");
 
 var app = express();
 
@@ -18,13 +21,20 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '.\\myapp\\build\\')));
 app.use(cors());
 
+(async () => {
+	await connect();
+})();
+
+app.set("db", sql);
+
 app.get("/", function(req, res,){
   console.log("Index being gotten");
   res.sendFile(path.join(__dirname, "myapp\\build\\index.html"));
 })
 
-app.get("/up", function(req, res,){
-  res.send("Yes I am up x2");
+app.get("/up", async function(req, res,){
+  let result = await sql.query("SELECT * FROM test")
+  res.send("Yes I am up x2" + result[0]);
 })
 
 // catch 404 and forward to error handler
