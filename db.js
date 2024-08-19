@@ -5,7 +5,7 @@ config = `Server=tcp:testappdatabase.database.windows.net,1433;Database=testappd
 module.exports = {
     connect: () => {
         sql.connect(config)
-        console.log(config);
     },
     sql,
+    config,
 };
