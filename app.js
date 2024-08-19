@@ -38,7 +38,9 @@ app.get("/up", async function(req, res,){
     res.send(result);
   }
   catch (err) {
-    res.send(err, config);
+    res.send({
+      error: err,
+      config: config});
   }
 
 })
