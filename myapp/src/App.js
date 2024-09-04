@@ -9,9 +9,9 @@ function App() {
   const [data, setData] = useState("");
 
   const getData = async () => {
-    let newData = await axios.get(window.location.href + "/up");
-    console.log(newData.data);
-    setData(newData.data);
+    let newData = await axios.get(window.location.href + "up");
+    console.log(newData.data.recordsets[0][0].name);
+    setData(newData.data.recordsets[0][0].name);
   }
 
   getData();

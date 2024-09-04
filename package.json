@@ -15,5 +15,9 @@
     "jade": "~1.11.0",
     "morgan": "~1.9.1",
     "mssql": "^11.0.1"
+  },
+  "devDependencies": {
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7"
   }
 }
