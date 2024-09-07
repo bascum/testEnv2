@@ -8,6 +8,10 @@ const sql = require("mssql");
 require("dotenv").config();
 const {connect, config} = require("./db.js");
 
+//Routes
+const indexRoute = require("./routes/index");
+const upRoute = require("./routes/up");
+
 var app = express();
 
 // view engine setup
@@ -26,24 +30,9 @@ app.use(cors());
 })();
 
 app.set("db", sql);
+app.use("/", indexRoute); //Does this do nothing??? Probably...
+app.use("/up", upRoute);
 
-app.get("/", function(req, res,){
-  console.log("Index being gotten");
-  res.sendFile(path.join(__dirname, "myapp\\build\\index.html"));
-})
-
-app.get("/up", async function(req, res,){
-  try {
-    let result = await sql.query("SELECT * FROM test");
-    res.send(result);
-  }
-  catch (err) {
-    res.send({
-      error: err,
-      config: config});
-  }
-
-})
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
