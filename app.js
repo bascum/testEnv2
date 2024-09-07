@@ -8,9 +8,11 @@ const sql = require("mssql");
 require("dotenv").config();
 const {connect, config} = require("./db.js");
 
+
 //Routes
 const indexRoute = require("./routes/index");
 const upRoute = require("./routes/up");
+const userRoute = require("./routes/users");
 
 var app = express();
 
@@ -25,6 +27,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '.\\myapp\\build\\')));
 app.use(cors());
 
+
 (async () => {
 	await connect();
 })();
@@ -32,6 +35,8 @@ app.use(cors());
 app.set("db", sql);
 app.use("/", indexRoute); //Does this do nothing??? Probably...
 app.use("/up", upRoute);
+app.use("/user", userRoute);
+
 
 
 // catch 404 and forward to error handler
