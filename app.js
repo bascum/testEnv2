@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const cors = require("cors");
 const sql = require("mssql");
+const bcrypt = require("bcrypt");
 require("dotenv").config();
 const {connect, config} = require("./db.js");
 

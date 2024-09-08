@@ -1,17 +1,18 @@
 var express = require('express');
 var router = express.Router();
 const sql = require("mssql");
+const bcrypt = require("bcrypt");
 
 
 /* GET users listing. */
-router.get('/test', async function(req, res) {
+router.get('/test', async function (req, res) {
   let request = new sql.Request();
   let response = await request.query("SELECT * FROM test");
   res.send(response);
 });
 
 
-router.post("/create", async function(req, res) {
+router.post("/create", async function (req, res) {
   /*
     Expected JSON  **Types probably don't matter cause I think JSON auto converts to str**
     {
@@ -33,53 +34,64 @@ router.post("/create", async function(req, res) {
     }
   */
 
-  console.log(req.body);
+  //console.log(await bcrypt.hash(req.body.password, 10));
 
-  let returnJson ={
+  let returnJson = {
     sucess: "",
     error: ""
   }
   let result;
+  let hash;
 
   //Check for username already in use
 
   let genericError = false;
   let request = new sql.Request();
-  try {
+  try { //Attempt to fill in all variables in the Querry. offers input sanitization
     request.input('username', sql.VarChar(50), req.body.username);
-    request.input("password", sql.VarChar(50), req.body.password);
+    request.input("password", sql.Text, await bcrypt.hash(req.body.password, 10));
     request.input('dep_num', sql.Int, req.body.dep_num);
     request.input("name", sql.VarChar(50), req.body.name);
     request.input("type", sql.TinyInt, req.body.type);
     request.input("callback", sql.Int, req.body.callback);
-    result = await request.query("Select * FROM [User] WHERE username = @username");
-    console.log(result);
+    result = await request.query("Select * FROM [User] WHERE username = @username"); //Check for duplicate username
+    //console.log(result);
   }
   catch (err) {
     returnJson = {
       ...returnJson,
       sucess: "no",
-      error: "Query failed for unknown reason"
+      error: "Query failed for unknown reason" //Query failed to run. No return value
     }
     genericError = true;
     console.log(err);
-  }
-  if((result.recordset.length > 0)){
-    returnJson = {
+  } try { //In a try block because if stateent can fail
+    if ((result.recordset.length > 0)) { // If 1 or more usernames return give no success
+      returnJson = {
+        ...returnJson,
+        sucess: "no",
+        error: "User already has an account"
+      }
+      genericError = true
+    }
+  } catch (err) {
+    returnJson = {  //If statement failed to run likely due to query returning an error. In testing this was usually
+                    //a bad data type overflowing the buffer
       ...returnJson,
       sucess: "no",
-      error: "User already has an account"
+      error: "Query failed for unknown reason. Most likely bad data type"
     }
-    genericError = true
+    genericError = true;
+    //console.log(err);
   }
 
   //Assuming none of the above failed lets add the user to the DB
-  if(!genericError){
+  if (!genericError) {
     try {
       result = await request.query("INSERT INTO [USER] (def_callback, username, password, dep_num, name, type) VALUES (@callback, @username, @password, @dep_num, @name, @type);");
-      console.log("Second Result: ", result);
+      //console.log("Second Result: ", result);
     } catch (error) {
-      console.log(error);
+      //console.log(error);
       returnJson = {
         ...returnJson,
         sucess: "no",
@@ -87,7 +99,7 @@ router.post("/create", async function(req, res) {
       }
       genericError = true;
     }
-    if(!genericError){
+    if (!genericError) {
       returnJson = {
         ...returnJson,
         sucess: "yes",
