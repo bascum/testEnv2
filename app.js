@@ -3,11 +3,12 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const session = require("express-session");
 const cors = require("cors");
 const sql = require("mssql");
 const bcrypt = require("bcrypt");
 require("dotenv").config();
-const {connect, config} = require("./db.js");
+const { connect, config } = require("./db.js");
 
 
 //Routes
@@ -27,10 +28,15 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '.\\myapp\\build\\')));
 app.use(cors());
+app.use(session({
+  secret: "Ticket-Secret",
+  resave: false,
+  saveUninitialized: false,
+}));
 
 
 (async () => {
-	await connect();
+  await connect();
 })();
 
 app.set("db", sql);
@@ -41,12 +47,12 @@ app.use("/user", userRoute);
 
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
