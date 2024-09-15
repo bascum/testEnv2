@@ -174,34 +174,81 @@ router.post("/login", async (req, res) => {
 
 router.post("/reset_pass/admin", async (req, res) => {
 
-    /*
-    Expected JSON  **Types probably don't matter cause I think JSON auto converts to str**
-    {
-      username: "", str
-      password: "", str
+  /*
+  Expected JSON  **Types probably don't matter cause I think JSON auto converts to str**
+  {
+    username: "", str
+    password: "", str
+  }
+*/
+
+  let genericError = false;
+
+  let response = {
+    success: "",
+    error: ""
+  }
+
+  let resultEmployee;
+  let request;
+
+  try {
+    request = new sql.Request();
+    request.input('username', sql.VarChar(50), req.body.username);
+    result = await request.query("Select * FROM [User] WHERE username = @username");
+    resultEmployee = result.recordset[0];
+  } catch (err) {
+    genericError = true;
+    response = {
+      ...response,
+      success: "no",
+      error: "Failed to get user. Most likely this user does not exist."
     }
-  */
+    console.log(err);
+  }
 
-  let request = new sql.Request();
-  let resultUser;
-  request.input('username', sql.VarChar(50), req.body.username);
-  result = await request.query("Select * FROM [User] WHERE username = @username");
-  let resultEmployee = result.recordset[0];
-
-  if(req.session.loggedIn) {
-    if (req.session.employee.type > resultEmployee.type) {
-      request = new sql.Request();
-      request.input('employee_id', sql.Int(50), resultEmployee.employee_id);
-      request.input('username', sql.VarChar(50), req.body.username);
-      request.input("password", sql.Text, await bcrypt.hash(req.body.password, 10));
-      result = await request.query("Update [User] SET password = @password WHERE employee_id = @employee_id"); //Check for duplicate username
-      console.log(result);
+  if (!genericError) {
+    if (req.session.loggedIn) {
+      if (req.session.employee.type > resultEmployee.type) {
+        request = new sql.Request();
+        request.input('employee_id', sql.Int(50), resultEmployee.employee_id);
+        request.input('username', sql.VarChar(50), req.body.username);
+        request.input("password", sql.Text, await bcrypt.hash(req.body.password, 10));
+        result = await request.query("Update [User] SET password = @password WHERE employee_id = @employee_id"); //Update the user Table, Set password to new password where employee_id matches
+        console.log(result);
+        response = {
+          ...response,
+          success: "yes",
+        }
+      } else {
+        console.log("Access level not high enough");
+        genericError = true;
+        response = {
+          ...response,
+          success: "no",
+          error: "Access level not high enough please contact a higher level admin"
+        }
+      }
     } else {
-      console.log("Access level not high enough")
+      //This would be where we would put a 2fa for a user to reset their own password... If we had one
+      //for now just going to resturn contact admin for password reset
+      response = {
+        ...response,
+        success: "no",
+        error: "Please reach out to admin for password reset. We do not support self service at this time"
+      }
     }
   }
 
-  res.send(true);
+
+  /*
+    {
+      success: "",
+      error: ""
+    }
+  */
+
+  res.send(response);
 })
 
 router.get("/test_session", async (req, res) => {
