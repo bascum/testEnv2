@@ -1,12 +1,21 @@
-var createError = require('http-errors');
+var createError = require('http-errors'); //
 var express = require('express');
 var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+var cookieParser = require('cookie-parser'); //
+var logger = require('morgan'); //
+const session = require("express-session");
 const cors = require("cors");
 const sql = require("mssql");
+const bcrypt = require("bcrypt");
 require("dotenv").config();
-const {connect, config} = require("./db.js");
+const { connect, config } = require("./db.js");
+
+
+//Routes
+const indexRoute = require("./routes/index");
+const upRoute = require("./routes/up");
+const userRoute = require("./routes/users");
+const ticketRoute = require("./routes/ticket");
 
 var app = express();
 
@@ -18,40 +27,34 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, '.\\myapp\\build\\')));
+app.use(express.static(path.join(__dirname, '.\\ticketing-system-senior-project\\dist\\')));
 app.use(cors());
+app.use(session({
+  secret: "Ticket-Secret",
+  resave: false,
+  saveUninitialized: false,
+}));
+
 
 (async () => {
-	await connect();
+  await connect();
 })();
 
 app.set("db", sql);
+app.use("/", indexRoute); //Does this do nothing??? Probably...
+app.use("/up", upRoute);
+app.use("/user", userRoute);
+app.use("/ticket", ticketRoute);
 
-app.get("/", function(req, res,){
-  console.log("Index being gotten");
-  res.sendFile(path.join(__dirname, "myapp\\build\\index.html"));
-})
 
-app.get("/up", async function(req, res,){
-  try {
-    let result = await sql.query("SELECT * FROM test");
-    res.send(result);
-  }
-  catch (err) {
-    res.send({
-      error: err,
-      config: config});
-  }
-
-})
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
