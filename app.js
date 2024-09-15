@@ -1,8 +1,8 @@
-var createError = require('http-errors');
+var createError = require('http-errors'); //
 var express = require('express');
 var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+var cookieParser = require('cookie-parser'); //
+var logger = require('morgan'); //
 const session = require("express-session");
 const cors = require("cors");
 const sql = require("mssql");
@@ -15,6 +15,7 @@ const { connect, config } = require("./db.js");
 const indexRoute = require("./routes/index");
 const upRoute = require("./routes/up");
 const userRoute = require("./routes/users");
+const ticketRoute = require("./routes/ticket");
 
 var app = express();
 
@@ -26,7 +27,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, '.\\myapp\\build\\')));
+app.use(express.static(path.join(__dirname, '.\\ticketing-system-senior-project\\dist\\')));
 app.use(cors());
 app.use(session({
   secret: "Ticket-Secret",
@@ -43,6 +44,7 @@ app.set("db", sql);
 app.use("/", indexRoute); //Does this do nothing??? Probably...
 app.use("/up", upRoute);
 app.use("/user", userRoute);
+app.use("/ticket", ticketRoute);
 
 
 

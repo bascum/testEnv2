@@ -180,7 +180,7 @@ router.post("/reset_pass/admin", async (req, res) => {
     username: "", str
     password: "", str
   }
-*/
+  */
 
   let genericError = false;
 
