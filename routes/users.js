@@ -172,7 +172,7 @@ router.post("/login", async (req, res) => {
   }
 })
 
-/*router.post("/reset_pass", async (req, res) => {
+router.post("/reset_pass/admin", async (req, res) => {
 
     /*
     Expected JSON  **Types probably don't matter cause I think JSON auto converts to str**
@@ -180,19 +180,29 @@ router.post("/login", async (req, res) => {
       username: "", str
       password: "", str
     }
-  */ /*
+  */
+
+  let request = new sql.Request();
+  let resultUser;
+  request.input('username', sql.VarChar(50), req.body.username);
+  result = await request.query("Select * FROM [User] WHERE username = @username");
+  let resultEmployee = result.recordset[0];
+
   if(req.session.loggedIn) {
-    if (req.session.employee.type > 1) {
-
-    } else {
-      let request = new sql.Request();
-      let resultUser;
+    if (req.session.employee.type > resultEmployee.type) {
+      request = new sql.Request();
+      request.input('employee_id', sql.Int(50), resultEmployee.employee_id);
       request.input('username', sql.VarChar(50), req.body.username);
-      result = await request.query("Select * FROM [User] WHERE username = @username");
-
+      request.input("password", sql.Text, await bcrypt.hash(req.body.password, 10));
+      result = await request.query("Update [User] SET password = @password WHERE employee_id = @employee_id"); //Check for duplicate username
+      console.log(result);
+    } else {
+      console.log("Access level not high enough")
     }
   }
-})*/
+
+  res.send(true);
+})
 
 router.get("/test_session", async (req, res) => {
   res.send("Not currently set up");
