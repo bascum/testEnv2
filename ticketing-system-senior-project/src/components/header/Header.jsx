@@ -8,7 +8,7 @@ export const Header = () => {
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
-        <Navbar.Brand href="#home">
+        <Navbar.Brand href="/">
           <img
             alt=""
             src="../../assets/react.svg"
@@ -21,8 +21,8 @@ export const Header = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
-            <Nav.Link href="#home">Home</Nav.Link>
-            <Nav.Link href="#login">Login</Nav.Link>
+            <Nav.Link href="/">Home</Nav.Link>
+            <Nav.Link href="login">Login</Nav.Link>
             <NavDropdown title="Menu" id="basic-nav-dropdown">
               <NavDropdown.Item href="#dynamicprofilehere">
                 My profile
