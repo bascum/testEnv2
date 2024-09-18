@@ -167,8 +167,11 @@ router.post("/login", async (req, res) => {
 
   if (genericError) {
     res.send(false);
+    console.log("NotLoggedIn");
   } else {
     res.send(true);
+    console.log("LoggedIn")
+
   }
 })
 
@@ -249,6 +252,28 @@ router.post("/reset_pass/admin", async (req, res) => {
   */
 
   res.send(response);
+})
+
+router.post("/logout", async (req, res) => {
+  /*
+    {
+      username: ""
+    }
+  */
+
+  try {
+    req.session.destroy();
+    res.send({
+      success: "yes",
+      error: ""
+    });
+  } catch (err) {
+    console.log(err);
+    res.send({
+      success: "no",
+      error: err
+    });
+  }
 })
 
 router.get("/test_session", async (req, res) => {

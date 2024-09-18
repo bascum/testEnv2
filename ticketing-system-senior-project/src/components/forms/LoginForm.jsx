@@ -1,15 +1,49 @@
-import {usestate} from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-
-const LoginForm = () => {
+const LoginForm = (props) => {
+  console.log("back at login\nLoggedin: ", props.loggedIn);
+  let navigate = useNavigate();
 
   const [username, setUsername] = useState("");
+  const [password, setPass] = useState("");
+  const [error, setError] = useState(null);
 
   const usernameBoxChangeHandler = (e) => {
-    e.preventDefault();
+    setUsername(e.target.value);
+  };
 
-    console.log(e);
-  }
+  const passwordBoxChangeHandler = (e) => {
+    setPass(e.target.value);
+    console.log(password);
+  };
+
+  const submitUsernameAndPass = async (e) => {
+    setError(null);
+    e.preventDefault();
+    let body = {
+      username: username,
+      password: password,
+    };
+    try {
+      let result = await axios.post("/user/login", body);
+
+      console.log(result.data);
+      if (result.data == true) {
+        console.log("Logged in successfully");
+        props.toggleLogged();
+        return navigate("/");
+      } else if (result.data == false){
+        setError("Incorrect login info");
+      }
+    } catch {
+      setError("Unable to check username");
+    }
+  };
+
+
+
   return (
     <form>
       <div className="form-group">
@@ -19,6 +53,8 @@ const LoginForm = () => {
           className="form-control"
           aria-label="Username"
           aria-describedby="basic-addon1"
+          value={username}
+          onChange={usernameBoxChangeHandler}
         />
         <small id="emailHelp" className="form-text text-muted">
           We&apos;ll never share your email with anyone else.
@@ -30,6 +66,8 @@ const LoginForm = () => {
           type="password"
           className="form-control"
           id="exampleInputPassword1"
+          value={password}
+          onChange={passwordBoxChangeHandler}
         />
       </div>
       <div className="form-group form-check">
@@ -39,9 +77,16 @@ const LoginForm = () => {
           id="exampleCheck1"
         />
       </div>
-      <button type="submit" className="btn btn-primary" href="/">
+      <button
+        className="btn btn-primary"
+        href="/"
+        onClick={submitUsernameAndPass}
+      >
         Submit
       </button>
+      <small id="emailHelp" className="form-text text-muted text-danger">
+        {error}
+      </small>
     </form>
   );
 };
