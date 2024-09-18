@@ -3,8 +3,25 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
+import { LinkContainer } from "react-router-bootstrap";
+import { useNavigate } from "react-router-dom";
 
-export const Header = () => {
+export const Header = (props) => {
+  let navigate = useNavigate();
+
+  const logOut = async() => { //Used for the logout button to log the user out and redirect to login  page. needs to be connected to server
+    let response = await axios.post("/user/logout", {
+      username: "",
+    })
+
+    if (response.data.success == "yes") {
+      props.toggleLogged();
+      return navigate("/login");
+    } else {
+      console.log("Something went wrong: ", response.data.error);
+    }
+  }
+
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
@@ -22,7 +39,16 @@ export const Header = () => {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
             <Nav.Link href="/">Home</Nav.Link>
-            <Nav.Link href="login">Login</Nav.Link>
+            {props.loggedIn ? //Will change the wording of the login button. Not really necessary because the user will never see the login button
+              (
+              <LinkContainer to="/login" onClick={logOut}>
+                <Nav.Link>Log Out</Nav.Link>
+              </LinkContainer>
+            ) : (
+              <LinkContainer to="/login" >
+                <Nav.Link>Login</Nav.Link>
+              </LinkContainer>
+            )}
             <NavDropdown title="Menu" id="basic-nav-dropdown">
               <NavDropdown.Item href="#dynamicprofilehere">
                 My profile
