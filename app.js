@@ -6,7 +6,7 @@ var logger = require('morgan'); //
 const session = require("express-session");
 const cors = require("cors");
 const sql = require("mssql");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 require("dotenv").config();
 const { connect, config } = require("./db.js");
 
