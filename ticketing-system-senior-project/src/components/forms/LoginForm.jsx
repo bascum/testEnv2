@@ -1,5 +1,15 @@
+import {usestate} from "react";
+
 
 const LoginForm = () => {
+
+  const [username, setUsername] = useState("");
+
+  const usernameBoxChangeHandler = (e) => {
+    e.preventDefault();
+
+    console.log(e);
+  }
   return (
     <form>
       <div className="form-group">
