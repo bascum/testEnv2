@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const sql = require("mssql");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 
