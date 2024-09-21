@@ -84,4 +84,89 @@ router.post("/create", async (req, res) => {
     */
 })
 
+router.post("/assign", async (req, res) => {
+    /* Input
+        {
+            username: "", Username to be assigned to
+            ticket_number: "", Ticket to assign
+        }
+    */
+
+    let JSONResponse = {
+        success: "",
+        error: "",
+    };
+
+    let request = new sql.Request();
+    let sqlResponse;
+
+    if (!req.session.loggedIn) {
+        JSONResponse = {
+            ...JSONResponse,
+            success: "no",
+            error: "Unable to assign ticket if not logged in",
+        }
+    } else if (req.session.employee.type < 3) {
+        JSONResponse = {
+            ...JSONResponse,
+            success: "no",
+            error: "User lacks access to assign tickets",
+        }
+    } else {
+        try {
+            console.log(req.body);
+            await request.input ("username", sql.VarChar(50), req.body.username);
+            console.log(req.session.employee);
+            await request.input ("requestor_id", sql.Int, req.session.employee.employee_id);
+            let targetEmployee = await request.query("SELECT * FROM [User] WHERE username = @username;");
+            let requestor = await request.query("SELECT * FROM [User] WHERE employee_id = @requestor_id;");
+            targetEmployee = targetEmployee.recordset[0];
+            console.log(targetEmployee);
+            requestor = requestor.recordset[0];
+            console.log(requestor);
+            await request.input ("ticket_num", sql.Int, req.body.ticket_number);
+            await request.input ("employee_id", sql.Int, targetEmployee.employee_id);
+            await request.input ("employee_name", sql.VarChar(50), targetEmployee.name);
+            await request.input ("requestor_name", sql.VarChar(50), requestor.name);
+            sqlResponse = await request.query(`
+                IF EXISTS (SELECT 1 FROM ticket_assignment WHERE ticket_num = @ticket_num)
+                BEGIN
+                    -- Update the row if the ticket_num exists
+                    UPDATE ticket_assignment
+                    SET
+                        employee_id = @employee_id
+                    WHERE
+                        ticket_num = @ticket_num;
+                END
+                ELSE
+                BEGIN
+                    -- Insert a new row if the ticket_num does not exist
+                    INSERT INTO ticket_assignment (ticket_num, employee_id)
+                    VALUES (@ticket_num, @employee_id);
+                END
+            `);
+
+            console.log("Insert passed");
+            request.query(`INSERT INTO Comment (ticket_num, employee_id, content)
+                                VALUES (@ticket_num, @requestor_id,
+                                'Ticket assigned by ' + CAST(@requestor_name AS VARCHAR) + ' to ' + CAST(@employee_name AS VARCHAR) + ' on ' + CAST(getdate() AS VARCHAR));`
+            );
+
+            JSONResponse = {
+                ...JSONResponse,
+                success: "yes"
+            }
+        } catch (err) {
+            JSONResponse = {
+                ...JSONResponse,
+                success: "no",
+                error: err,
+            }
+        }
+    }
+
+    res.send(JSONResponse);
+
+})
+
 module.exports = router;
