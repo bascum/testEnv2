@@ -54,7 +54,7 @@ export const Header = (props) => {
               <NavDropdown.Item href="#dynamicprofilehere">
                 My profile
               </NavDropdown.Item>
-              <NavDropdown.Item href="#dynamicstringforprofilehere">
+              <NavDropdown.Item href="/changepassword">
                 Reset password
               </NavDropdown.Item>
               <NavDropdown.Divider />
