@@ -4,7 +4,7 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { LinkContainer } from "react-router-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export const Header = (props) => {
@@ -26,7 +26,7 @@ export const Header = (props) => {
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
-        <Navbar.Brand href="/">
+        <Navbar.Brand to="/dashboard">
           <img
             alt=""
             src="../../assets/react.svg"
@@ -39,7 +39,9 @@ export const Header = (props) => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
-            <Nav.Link href="/">Home</Nav.Link>
+            <LinkContainer to="/">
+            <Nav.Link>Home</Nav.Link>
+            </LinkContainer>
             {props.loggedIn ? //Will change the wording of the login button. Not really necessary because the user will never see the login button
               (
               <LinkContainer to="/login" onClick={logOut}>

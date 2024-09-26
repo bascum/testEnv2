@@ -1,17 +1,20 @@
 import "./home.css";
+import { Link } from "react-router-dom";
+
 
 export const Home = () => {
+
   return (
     <div className="jumbotron">
       <h1 className="display-4">Welcome!</h1>
       <p className="lead">
         Select New Ticket to create a new ticket or select My Tickets to view
-        yout tickets.
+        your tickets.
       </p>
       <hr className="m-4 gap-2" />
-      <a className="btn btn-primary btn-lg mr-4" href="/newticket" role="button">
+      <Link className="btn btn-primary btn-lg mr-4" to="/newticket" role="button">
         New
-      </a>
+      </Link>
 
       <a
         className="btn btn-primary btn-lg"

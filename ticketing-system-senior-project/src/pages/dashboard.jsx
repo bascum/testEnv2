@@ -28,7 +28,6 @@ export function Dashboard(props) {
             <Header loggedIn={props.loggedIn} toggleLogged={props.toggleLogged} />
             <Home />
             <About />
-            <DropdownPrimary />
         </>
     );
 }
