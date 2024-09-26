@@ -31,7 +31,7 @@ const LoginForm = (props) => {
 
       console.log(result.data);
       if (result.data == true) {
-        console.log("Logged in successfully");
+        props.setMessageOfTheDay("Logged in successfully");
         props.toggleLogged();
         return navigate("/");
       } else if (result.data == false){

@@ -197,7 +197,7 @@ router.post("/reset_pass/admin", async (req, res) => {
 
   try {
     request = new sql.Request();
-    request.input('username', sql.VarChar(50), req.body.username);
+    request.input('username', sql.VarChar(50), req.body.username.toLowerCase());
     result = await request.query("Select * FROM [User] WHERE username = @username");
     resultEmployee = result.recordset[0];
   } catch (err) {
@@ -211,11 +211,11 @@ router.post("/reset_pass/admin", async (req, res) => {
   }
 
   if (!genericError) {
-    if (req.session.loggedIn) {
-      if (req.session.employee.type > resultEmployee.type) {
+    if (req.session.loggedIn || (req.session.employee.username.toLowerCase() == req.body.username.toLowerCase())){
+      if ((req.session.employee.type > resultEmployee.type) || (req.session.employee.type == 4)) {
         request = new sql.Request();
         request.input('employee_id', sql.Int(50), resultEmployee.employee_id);
-        request.input('username', sql.VarChar(50), req.body.username);
+        request.input('username', sql.VarChar(50), req.body.username.toLowerCase());
         request.input("password", sql.Text, await bcrypt.hash(req.body.password, 10));
         result = await request.query("Update [User] SET password = @password WHERE employee_id = @employee_id"); //Update the user Table, Set password to new password where employee_id matches
         console.log(result);

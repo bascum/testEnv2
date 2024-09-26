@@ -12,7 +12,7 @@ export function Login(props) {
 
   return (
     <>
-      <LoginForm toggleLogged={props.toggleLogged} loggedIn={props.loggedIn}/>
+      <LoginForm toggleLogged={props.toggleLogged} loggedIn={props.loggedIn} setMessageOfTheDay={props.setMessageOfTheDay}/>
     </>
   );
 }
