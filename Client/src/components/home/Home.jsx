@@ -1,9 +1,7 @@
 import "./home.css";
 import { Link } from "react-router-dom";
 
-
 export const Home = () => {
-
   return (
     <div className="jumbotron">
       <h1 className="display-4">Welcome!</h1>
@@ -12,17 +10,20 @@ export const Home = () => {
         your tickets.
       </p>
       <hr className="m-4 gap-2" />
-      <Link className="btn btn-primary btn-lg mr-4" to="/newticket" role="button">
+      <Link
+        className="btn btn-primary btn-lg mr-4"
+        to="/newticket"
+        role="button"
+      >
         New
       </Link>
-
-      <a
-        className="btn btn-primary btn-lg"
-        href="#dynamicmyticketshere"
+      <Link
+        className="btn btn-primary btn-lg mr-4"
+        to="/mytickets"
         role="button"
       >
         My Tickets
-      </a>
+      </Link>
     </div>
   );
 };

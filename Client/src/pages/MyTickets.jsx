@@ -1,9 +1,14 @@
-import React from 'react'
+import React from "react";
+import { Header } from "../components/header/Header";
+import List from "../components/list/List";
 
-const MyTickets = () => {
+export const MyTickets = () => {
   return (
-    <div>mytickets</div>
-  )
-}
+    <>
+      <Header />
+      <List />
+    </>
+  );
+};
 
-export default MyTickets
+export default MyTickets;

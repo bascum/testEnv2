@@ -3,6 +3,7 @@ import "./App.css";
 import { Dashboard } from "./pages/Dashboard";
 import { Login } from "./pages/Login";
 import { NewTicket } from "./pages/NewTicket";
+import { MyTickets } from "./pages/MyTickets";
 import { Route, Routes } from "react-router-dom";
 import { useState } from "react";
 import ChangePassword from "./pages/ChangePassword";
@@ -44,8 +45,17 @@ function App() {
           element={<NewTicket setMessageOfTheDay={setMessageOfTheDay} />}
         />
         <Route
+          path="/mytickets"
+          element={<MyTickets setMessageOfTheDay={setMessageOfTheDay} />}
+        />
+        <Route
           path="/changepassword"
-          element={<ChangePassword loggedIn={loggedIn} setMessageOfTheDay={setMessageOfTheDay} />}
+          element={
+            <ChangePassword
+              loggedIn={loggedIn}
+              setMessageOfTheDay={setMessageOfTheDay}
+            />
+          }
         />
       </Routes>
     </>
