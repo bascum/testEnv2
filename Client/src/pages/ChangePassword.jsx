@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Alert from "react-bootstrap/Alert";
 import axios from "axios";
+import Header from "../components/header/Header";
 
 export function ChangePassword(props) {
   const [password, setPassword] = useState("");
@@ -55,6 +56,7 @@ export function ChangePassword(props) {
 
   return (
     <>
+    <Header loggedIn={props.loggedIn} toggleLogged={props.toggleLogged} />
       <form>
         {error != "" ? (<Alert key={'info'} variant={'info'}>
           {error}

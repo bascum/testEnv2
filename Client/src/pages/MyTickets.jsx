@@ -2,10 +2,10 @@ import React from "react";
 import { Header } from "../components/header/Header";
 import List from "../components/list/List";
 
-export const MyTickets = () => {
+export const MyTickets = (props) => {
   return (
     <>
-      <Header />
+      <Header loggedIn={props.loggedIn} toggleLogged={props.toggleLogged} />
       <List />
     </>
   );

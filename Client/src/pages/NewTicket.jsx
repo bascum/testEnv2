@@ -1,10 +1,10 @@
 import DropdownPrimary from "../components/dropdowns/DropdownPrimary";
 import { Header } from "../components/header/Header";
 
-export const NewTicket = () => {
+export const NewTicket = (props) => {
   return (
     <>
-      <Header />
+      <Header loggedIn={props.loggedIn} toggleLogged={props.toggleLogged} />
       <div className="container">
         <form>
           <div className="row">
