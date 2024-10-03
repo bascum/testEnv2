@@ -7,14 +7,14 @@ import { useNavigate } from "react-router-dom";
 import DropdownPrimary from "../components/dropdowns/DropdownPrimary";
 
 export function Dashboard(props) {
-    console.log("arrived at dash\nLogged in: ", props.loggedIn);
-    let navigate = useNavigate();
-    useEffect(() => {
-        //On page load if user not logged in immediatly redirect to login page
-        if (!props.loggedIn) {
-            return navigate("/login");
-        }
-    }, []);
+    // console.log("arrived at dash\nLogged in: ", props.loggedIn);
+    // let navigate = useNavigate();
+    // useEffect(() => {
+    //     //On page load if user not logged in immediatly redirect to login page
+    //     if (!props.loggedIn) {
+    //         return navigate("/login");
+    //     }
+    // }, []);
 
     return (
         <>

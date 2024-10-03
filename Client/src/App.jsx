@@ -49,14 +49,22 @@ function App() {
           element={<MyTickets setMessageOfTheDay={setMessageOfTheDay} />}
         />
         <Route
+          path="/myprofile"
+          element={
+            <ChangePassword
+              loggedIn={loggedIn}
+              setMessageOfTheDay={setMessageOfTheDay}
+            />
+          }/>
+        <Route
           path="/changepassword"
           element={
             <ChangePassword
               loggedIn={loggedIn}
               setMessageOfTheDay={setMessageOfTheDay}
             />
-          }
-        />
+          }/>
+
       </Routes>
     </>
   );

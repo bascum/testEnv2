@@ -53,9 +53,11 @@ export const Header = (props) => {
               </LinkContainer>
             )}
             <NavDropdown title="Menu" id="basic-nav-dropdown">
-              <NavDropdown.Item href="#dynamicprofilehere">
+              <LinkContainer to="/myprofile">
+                <NavDropdown.Item>
                 My profile
               </NavDropdown.Item>
+              </LinkContainer>
               <LinkContainer to="/changepassword" >
                 <NavDropdown.Item>
                   Reset password
