@@ -4,7 +4,6 @@ import { Header } from "../components/header/Header";
 export const NewTicket = () => {
   return (
     <>
-      <Header />
       <div className="container">
         <form>
           <div className="row">

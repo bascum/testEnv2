@@ -5,10 +5,17 @@ import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { LinkContainer } from "react-router-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import axios from "axios";
 
 export const Header = (props) => {
   let navigate = useNavigate();
+  useEffect(() => {
+      //On page load if user not logged in immediatly redirect to login page
+      if (!props.loggedIn) {
+          return navigate("/login");
+      }
+  }, []);
 
   const logOut = async() => { //Used for the logout button to log the user out and redirect to login  page. needs to be connected to server
     let response = await axios.post("/user/logout", {

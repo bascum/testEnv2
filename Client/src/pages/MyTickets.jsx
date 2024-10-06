@@ -5,7 +5,6 @@ import List from "../components/list/List";
 export const MyTickets = () => {
   return (
     <>
-      <Header />
       <List />
     </>
   );
