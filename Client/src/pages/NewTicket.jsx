@@ -1,5 +1,5 @@
-import DropdownPrimary from "../components/dropdowns/DropdownPrimary";
-import { Header } from "../components/header/Header";
+import DropdownPrimary from "../components/DropdownPrimary";
+import { Header } from "../components/Header";
 
 export const NewTicket = (props) => {
   return (

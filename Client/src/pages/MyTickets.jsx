@@ -1,6 +1,6 @@
 import React from "react";
-import { Header } from "../components/header/Header";
-import List from "../components/list/List";
+import { Header } from "../components/Header";
+import List from "../components/List";
 
 export const MyTickets = (props) => {
   return (

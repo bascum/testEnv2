@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Alert from "react-bootstrap/Alert";
 import axios from "axios";
-import Header from "../components/header/Header";
+import Header from "../components/Header";
 
 export function ChangePassword(props) {
   const [password, setPassword] = useState("");

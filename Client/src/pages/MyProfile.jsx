@@ -1,9 +1,12 @@
 import React from 'react'
+import { Header } from '../components/Header'
+import Profile from '../components/Profile'
 
-const MyProfile = () => {
+const MyProfile = (props) => {
   return (
 <>
-TEST
+<Header loggedIn={props.loggedIn} toggleLogged={props.toggleLogged} />
+<Profile />
 </> )
 }
 
