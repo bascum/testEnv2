@@ -162,9 +162,9 @@ router.post("/create", async (req, res) => {
                 await request.input("type", sql.TinyInt, req.body.type);
                 await request.input("description", sql.Text, req.body.description);
                 if (req.body.callback == "") {
-                    await request.input("callback", sql.Int, req.session.employee.def_callback);
+                    await request.input("callback", sql.BigInt, req.session.employee.def_callback);
                 } else {
-                    await request.input("callback", sql.Int, req.body.callback);
+                    await request.input("callback", sql.BigInt, parseInt(req.body.callback));
                 }
                 await request.input("created_by", sql.Int, req.session.employee.employee_id);
                 //await request.input("created_on", sql.DateTime, currentDateTime);
@@ -183,7 +183,7 @@ router.post("/create", async (req, res) => {
                 JSONResponse = {
                     ...JSONResponse,
                     success: "no",
-                    error: "Missing required info",
+                    error: "Something messed up in the insert",
                 };
                 console.log(err);
             }

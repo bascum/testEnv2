@@ -57,7 +57,7 @@ router.post("/create", async function (req, res) {
         request.input('dep_num', sql.Int, req.body.dep_num);
         request.input("name", sql.VarChar(50), req.body.name);
         request.input("type", sql.TinyInt, req.body.type);
-        request.input("callback", sql.Int, req.body.callback);
+        request.input("callback", sql.BigInt, req.body.callback);
         result = await request.query("Select * FROM [User] WHERE username = @username"); //Check for duplicate username
         //console.log(result);
       }

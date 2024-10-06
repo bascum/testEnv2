@@ -1,16 +1,60 @@
 import DropdownPrimary from "../components/dropdowns/DropdownPrimary";
 import { Header } from "../components/header/Header";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-export const NewTicket = () => {
-  // State for controlled inputs
+const testPrinters = [
+  {
+    inv_num: 3,
+    dep_num: 2,
+    location: null,
+    color: false,
+    make_and_model: 7,
+  },
+  {
+    inv_num: 8,
+    dep_num: 2,
+    location: null,
+    color: true,
+    make_and_model: 4,
+  },
+];
+
+export const NewTicket = (props) => {
+  let navigate = useNavigate();
+
+  const [listOfPrinters, setListOfPrinters] = useState(testPrinters);
+  const [listOfPrinterNums, setListOfPrinterNums] = useState([]);
   const [formData, setFormData] = useState({
-    printerNumber: "",
-    callbackNumber: "",
-    priority: "",
+    printer_num: "None",
+    type: "",
     description: "",
+    callback: "",
   });
 
+  const phoneNumRegex = new RegExp("^d{10}$");
+
+  useEffect(() => {
+    getPrinters();
+  }, []);
+
+  const makeListOfPrinterNums = (listOfPrintersTemp) => {
+    let list = [];
+    listOfPrintersTemp.map((printer) => {
+      list.push({ name: printer.inv_num, value: printer.inv_num });
+    });
+    setListOfPrinterNums(list);
+  };
+
+  const getPrinters = async () => {
+    let result = (await axios.get("/printer/get_printers")).data;
+    console.log(result);
+    if (result.success == "yes") {
+      setListOfPrinters(result.printers); //This will make a list of printer objects but dropdown takes a list of ints
+      makeListOfPrinterNums(result.printers);
+    }
+  };
   // Handle changes for all inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,17 +65,37 @@ export const NewTicket = () => {
   };
 
   // Handle dropdown change for Printer Number and Priority
-  const handleDropdownChange = (name, value) => {
+  const handleDropdownChange = (name, e) => {
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: e.target.value,
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Submit formData logic
-    console.log(formData);
+    if (
+      (/^\d+$/.test(formData.callback) &&
+      formData.callback.length >= 10) && //Lazy regex cause I couldn't get proper regex to work
+      formData.type &&
+      formData.printer_num &&
+      formData.description
+    ) {
+      let result = await axios.post("/ticket/create", formData);
+      console.log(result);
+      if (result.data.success == "yes") {
+        props.setMessageOfTheDay(
+          `Successfully submitted ticket. Your ticket number is ${result.data.ticket_num}`
+        );
+        return navigate("/");
+      } else {
+        props.setMessageOfTheDay(
+          `Something went wrong your ticket was not created`
+        );
+        return navigate("/");
+      }
+    }
   };
 
   return (
@@ -44,15 +108,13 @@ export const NewTicket = () => {
             <div className="row mb-3 justify-content-between align-items-center">
               <div className="col-sm-4">
                 <DropdownPrimary
-                  title="Select Printer Number"
-                  selected={formData.printerNumber}
-                  onSelect={(value) =>
-                    handleDropdownChange("printerNumber", value)
-                  }
+                  listOfValues={listOfPrinterNums}
+                  selected={`Printer Num: ${formData.printer_num}`}
+                  onSelect={(e) => handleDropdownChange("printer_num", e)}
                 />
               </div>
               <div className="col-sm-4 offset-sm-4 text-muted">
-                {formData.printerNumber || "None selected"}
+                {formData.printer_num || "None selected"}
               </div>
             </div>
 
@@ -63,11 +125,11 @@ export const NewTicket = () => {
               </label>
               <div className="col-sm-6">
                 <input
-                  name="callbackNumber"
+                  name="callback"
                   className="form-control"
                   type="text"
                   placeholder="Callback Number"
-                  value={formData.callbackNumber}
+                  value={formData.callback}
                   onChange={handleChange}
                 />
               </div>
@@ -77,13 +139,26 @@ export const NewTicket = () => {
             <div className="row mb-3 justify-content-between align-items-center">
               <div className="col-sm-4">
                 <DropdownPrimary
-                  title="Select Priority"
-                  selected={formData.priority}
-                  onSelect={(value) => handleDropdownChange("priority", value)}
+                  selected={`Service Type: ${
+                    formData.type
+                      ? formData.type == 1
+                        ? "Toner"
+                        : "Service"
+                      : "None Selected"
+                  }`}
+                  listOfValues={[
+                    { name: "Toner", value: 1 },
+                    { name: "Service", value: 2 },
+                  ]}
+                  onSelect={(e) => handleDropdownChange("type", e)}
                 />
               </div>
               <div className="col-sm-4 offset-sm-4 text-muted">
-                {formData.priority || "None selected"}
+                {(formData.type
+                  ? formData.type == 1
+                    ? "Toner"
+                    : "Service"
+                  : false) || "None selected"}
               </div>
             </div>
 
@@ -101,7 +176,7 @@ export const NewTicket = () => {
               </div>
             </div>
 
-            <button type="submit" className="btn btn-primary">
+            <button onClick={handleSubmit} className="btn btn-primary">
               Submit
             </button>
           </form>
