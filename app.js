@@ -16,6 +16,7 @@ const indexRoute = require("./routes/index");
 const upRoute = require("./routes/up");
 const userRoute = require("./routes/users");
 const ticketRoute = require("./routes/ticket");
+const printerRoute = require("./routes/printer");
 
 var app = express();
 
@@ -45,6 +46,7 @@ app.use("/", indexRoute); //Does this do nothing??? Probably...
 app.use("/up", upRoute);
 app.use("/user", userRoute);
 app.use("/ticket", ticketRoute);
+app.use("/printer", printerRoute);
 
 
 

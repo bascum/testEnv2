@@ -1,6 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-import { Dashboard } from "./pages/Dashboard";
+import { Dashboard } from "./pages/dashboard";
+import { Header } from "./components/header/Header";
 import { Login } from "./pages/Login";
 import { NewTicket } from "./pages/NewTicket";
 import { MyTickets } from "./pages/MyTickets";
@@ -19,6 +20,7 @@ function App() {
 
   return (
     <>
+      <Header loggedIn={loggedIn} toggleLogged={toggleLogged} />
       <Routes>
         <Route
           path="/"
