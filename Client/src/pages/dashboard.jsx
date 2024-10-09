@@ -4,7 +4,6 @@ import { About } from "../components/about/About";
 import Alert from "react-bootstrap/Alert";
 
 export function Dashboard(props) {
-    console.log("arrived at dash\nLogged in: ", props.loggedIn);
 
     return (
         <>

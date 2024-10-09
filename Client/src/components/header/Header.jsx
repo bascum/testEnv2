@@ -59,7 +59,8 @@ export const Header = (props) => {
                 <Nav.Link>Login</Nav.Link>
               </LinkContainer>
             )}
-            <NavDropdown title="Menu" id="basic-nav-dropdown">
+
+{/* {            <NavDropdown title="Menu" id="basic-nav-dropdown">
               <NavDropdown.Item href="#dynamicprofilehere">
                 My profile
               </NavDropdown.Item>
@@ -70,7 +71,7 @@ export const Header = (props) => {
               </LinkContainer>
               <NavDropdown.Divider />
               <NavDropdown.Item href="#FAQ">FAQ</NavDropdown.Item>
-            </NavDropdown>
+            </NavDropdown>} */}
           </Nav>
         </Navbar.Collapse>
       </Container>
