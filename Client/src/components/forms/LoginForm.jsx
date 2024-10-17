@@ -45,6 +45,8 @@ const LoginForm = (props) => {
 
 
   return (
+    <>
+    <div className="container text-center col-md-4">
     <form>
       <div className="form-group">
         <label htmlFor="exampleInputEmail1">Username</label>
@@ -70,15 +72,15 @@ const LoginForm = (props) => {
           onChange={passwordBoxChangeHandler}
         />
       </div>
-      <div className="form-group form-check">
+      {/* <div className="form-group form-check">
         <input
           type="checkbox"
           className="form-check-input"
           id="exampleCheck1"
         />
-      </div>
+      </div> */}
       <button
-        className="btn btn-primary"
+        className="btn btn-primary mt-3"
         href="/"
         onClick={submitUsernameAndPass}
       >
@@ -88,6 +90,8 @@ const LoginForm = (props) => {
         {error}
       </small>
     </form>
+    </div>
+    </>
   );
 };
 

@@ -14,11 +14,13 @@ export function Login(props) {
 
   return (
     <>
+    <div className="container text-center mt-5">
       <LoginForm
         toggleLogged={props.toggleLogged}
         loggedIn={props.loggedIn}
         setMessageOfTheDay={props.setMessageOfTheDay}
       />
+      </div>
     </>
   );
 }

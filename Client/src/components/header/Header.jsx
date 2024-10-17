@@ -34,7 +34,7 @@ export const Header = (props) => {
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
-        <LinkContainer to="/dashboard">
+        <LinkContainer to="/">
           <Navbar.Brand>
             <img
               alt=""
