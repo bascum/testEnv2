@@ -7,6 +7,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import axios from "axios";
+import ticket from "../../assets/ticket.svg";
 
 export const Header = (props) => {
   let navigate = useNavigate();
@@ -32,13 +33,13 @@ export const Header = (props) => {
   };
 
   return (
-    <Navbar expand="lg" className="bg-body-tertiary">
+    <Navbar expand="lg" className="navbar">
       <Container>
         <LinkContainer to="/">
           <Navbar.Brand>
             <img
               alt=""
-              src="../../assets/react.svg"
+              src={ticket}
               width="30"
               height="30"
               className="d-inline-block align-top"
@@ -62,12 +63,16 @@ export const Header = (props) => {
               </LinkContainer>
             )}
             <NavDropdown title="Menu" id="basic-nav-dropdown">
-              <NavDropdown.Item href="#dynamicprofilehere">My profile</NavDropdown.Item>
+              <LinkContainer to="/myprofile">
+              <NavDropdown.Item>My profile</NavDropdown.Item>
+              </LinkContainer>
               <LinkContainer to="/changepassword">
                 <NavDropdown.Item>Reset password</NavDropdown.Item>
               </LinkContainer>
               <NavDropdown.Divider />
-              <NavDropdown.Item href="#FAQ">FAQ</NavDropdown.Item>
+              <LinkContainer to="/faq">
+              <NavDropdown.Item>FAQ</NavDropdown.Item>
+              </LinkContainer>
             </NavDropdown>
           </Nav>
         </Navbar.Collapse>

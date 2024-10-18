@@ -46,27 +46,27 @@ const LoginForm = (props) => {
 
   return (
     <>
-    <div className="container text-center col-md-4">
+    <div className="container text-center mt-5 col-md-4">
     <form>
-      <div className="form-group">
+      <div className="form-group mb-4">
         <label htmlFor="exampleInputEmail1">Username</label>
         <input
           type="text"
-          className="form-control"
+          className="shadow form-control"
           aria-label="Username"
           aria-describedby="basic-addon1"
           value={username}
           onChange={usernameBoxChangeHandler}
         />
         <small id="emailHelp" className="form-text text-muted">
-          We&apos;ll never share your email with anyone else.
+          If you don't have an account, please contact your system administrator.
         </small>
       </div>
       <div className="form-group">
         <label htmlFor="exampleInputPassword1">Password</label>
         <input
           type="password"
-          className="form-control"
+          className="shadow form-control"
           id="exampleInputPassword1"
           value={password}
           onChange={passwordBoxChangeHandler}
@@ -86,10 +86,10 @@ const LoginForm = (props) => {
       >
         Submit
       </button>
-      <small id="emailHelp" className="form-text text-muted text-danger">
-        {error}
-      </small>
     </form>
+    <div id="emailHelp" className="form-text text-danger">
+        {error}
+      </div>
     </div>
     </>
   );
