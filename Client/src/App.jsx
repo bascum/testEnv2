@@ -1,6 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-import { Dashboard } from "./pages/dashboard";
+import { Dashboard } from "./pages/Dashboard";
 import { Header } from "./components/header/Header";
 import { Login } from "./pages/Login";
 import { NewTicket } from "./pages/NewTicket";
