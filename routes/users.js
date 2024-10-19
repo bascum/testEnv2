@@ -155,11 +155,15 @@ router.post("/login", async (req, res) => {
     console.log(err);
   }
   try {
-    if (bcrypt.compare(resultUser.password, req.body.password)) {
+    if (await bcrypt.compare(req.body.password, resultUser.password)) {
+      console.log((bcrypt.compare(resultUser.password, req.body.password)))
       req.session.employee = resultUser;
       req.session.loggedIn = true;
+      console.log("logged in successfully???")
     }
-    console.log("logged in successfully???")
+    else {
+      genericError = true
+    }
   } catch (err) {
     console.log(err, "\n\nsomething failed in second try");
     genericError = true;
@@ -175,7 +179,7 @@ router.post("/login", async (req, res) => {
   }
 })
 
-router.post("/reset_pass/admin", async (req, res) => {
+router.post("/reset_pass", async (req, res) => {
 
   /*
   Expected JSON  **Types probably don't matter cause I think JSON auto converts to str**
@@ -196,10 +200,14 @@ router.post("/reset_pass/admin", async (req, res) => {
   let request;
 
   try {
-    request = new sql.Request();
-    request.input('username', sql.VarChar(50), req.body.username.toLowerCase());
-    result = await request.query("Select * FROM [User] WHERE username = @username");
-    resultEmployee = result.recordset[0];
+    if ((req.session.employee.username != req.body.username) && req.body.username != "") {
+      request = new sql.Request();
+      request.input('username', sql.VarChar(50), req.body.username.toLowerCase());
+      result = await request.query("Select * FROM [User] WHERE username = @username");
+      resultEmployee = result.recordset[0];
+    } else if ((req.session.employee.username == req.body.username)) {
+      resultEmployee = req.session.employee;
+    }
   } catch (err) {
     genericError = true;
     response = {
@@ -211,8 +219,8 @@ router.post("/reset_pass/admin", async (req, res) => {
   }
 
   if (!genericError) {
-    if (req.session.loggedIn || (req.session.employee.username.toLowerCase() == req.body.username.toLowerCase())){
-      if ((req.session.employee.type > resultEmployee.type) || (req.session.employee.type == 4)) {
+    if (req.session.loggedIn) {
+      if ((req.session.employee.type > 2) || (req.session.employee.username.toLowerCase() == req.body.username.toLowerCase())) {
         request = new sql.Request();
         request.input('employee_id', sql.Int(50), resultEmployee.employee_id);
         request.input('username', sql.VarChar(50), req.body.username.toLowerCase());
@@ -253,6 +261,8 @@ router.post("/reset_pass/admin", async (req, res) => {
 
   res.send(response);
 })
+
+
 
 router.post("/logout", async (req, res) => {
   /*

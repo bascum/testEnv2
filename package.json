@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "test": "",
     "start": "node ./bin/www"
   },
   "dependencies": {
@@ -15,8 +16,10 @@
     "express-session": "^1.18.0",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
+    "jest": "^29.7.0",
     "morgan": "~1.9.1",
-    "mssql": "^11.0.1"
+    "mssql": "^11.0.1",
+    "supertest": "^7.0.0"
   },
   "devDependencies": {
     "sqlite": "^5.1.1",

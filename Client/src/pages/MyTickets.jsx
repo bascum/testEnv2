@@ -1,9 +1,10 @@
 import React from "react";
 import { Header } from "../components/header/Header";
+import { TicketRow } from "../components/Ticket Row/TicketRow";
 import { TicketCard } from "../components/Ticket Card/TicketCard";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {Row, Col} from "react-bootstrap";
+import { Row, Col, Table } from "react-bootstrap";
 import axios from "axios";
 
 const testTickets = [
@@ -76,7 +77,7 @@ const testTickets = [
 export const MyTickets = ({ setMessageOfTheDay }) => {
   let navigate = useNavigate();
 
-  const [myTickets, setMyTickets] = useState([]);
+  const [myTickets, setMyTickets] = useState(testTickets);
 
   const getTickets = async () => {
     let results = await axios.get("/ticket/dashboard/get_tickets");
@@ -91,23 +92,34 @@ export const MyTickets = ({ setMessageOfTheDay }) => {
   };
 
   useEffect(() => {
-    getTickets();
+    //getTickets();
   }, []);
 
   return (
     <>
-      <Row className="g-4">
-        {/* Row with gap between columns */}
-        {myTickets != [] ? (
-          myTickets.map((ticket, index) => (
-            <Col key={index} xs={12} sm={6} md={4} lg={3}>
-              <TicketCard ticket={ticket} />
-            </Col>
-          ))
-        ) : (
-          <></>
-        )}
-      </Row>
+      <Table striped bordered hover responsive className="mt-4 mx-auto" style={{ maxWidth: "95%" }}>
+        <thead>
+          <tr>
+            <th>Ticket #</th>
+            <th>Status</th>
+            <th>Printer Number</th>
+            <th>Created On</th>
+            <th>Created By</th>
+            <th>Assigned To</th>
+            <th>Assigned Date</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          {myTickets.length > 0 ? (
+            myTickets.map((ticket, index) => {
+              return <TicketRow ticket={ticket} index={index} />;
+            })
+          ) : (
+            <></>
+          )}
+        </tbody>
+      </Table>
     </>
   );
 };
