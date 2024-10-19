@@ -1,6 +1,8 @@
+import "./loginform.css";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import About from "../about/About";
 
 const LoginForm = (props) => {
   console.log("back at login\nLoggedin: ", props.loggedIn);
@@ -34,7 +36,7 @@ const LoginForm = (props) => {
         props.setMessageOfTheDay("Logged in successfully");
         props.toggleLogged();
         return navigate("/");
-      } else if (result.data == false){
+      } else if (result.data == false) {
         setError("Incorrect login info");
       }
     } catch {
@@ -46,51 +48,54 @@ const LoginForm = (props) => {
 
   return (
     <>
-    <div className="container text-center mt-5 col-md-4">
-    <form>
-      <div className="form-group mb-4">
-        <label htmlFor="exampleInputEmail1">Username</label>
-        <input
-          type="text"
-          className="shadow form-control"
-          aria-label="Username"
-          aria-describedby="basic-addon1"
-          value={username}
-          onChange={usernameBoxChangeHandler}
-        />
-        <small id="emailHelp" className="form-text text-muted">
-          If you don't have an account, please contact your system administrator.
-        </small>
-      </div>
-      <div className="form-group">
-        <label htmlFor="exampleInputPassword1">Password</label>
-        <input
-          type="password"
-          className="shadow form-control"
-          id="exampleInputPassword1"
-          value={password}
-          onChange={passwordBoxChangeHandler}
-        />
-      </div>
-      {/* <div className="form-group form-check">
+      <div className="form text-center">
+        <div className="container text-center col-md-4">
+          <form>
+            <div className="form-group mb-4">
+              <label htmlFor="exampleInputEmail1">Username</label>
+              <input
+                type="text"
+                className="shadow form-control"
+                aria-label="Username"
+                aria-describedby="basic-addon1"
+                value={username}
+                onChange={usernameBoxChangeHandler}
+              />
+              <small id="emailHelp" className="form-text text-muted">
+                If you don't have an account, please contact your system administrator.
+              </small>
+            </div>
+            <div className="form-group">
+              <label htmlFor="exampleInputPassword1">Password</label>
+              <input
+                type="password"
+                className="shadow form-control"
+                id="exampleInputPassword1"
+                value={password}
+                onChange={passwordBoxChangeHandler}
+              />
+            </div>
+            {/* <div className="form-group form-check">
         <input
           type="checkbox"
           className="form-check-input"
           id="exampleCheck1"
         />
       </div> */}
-      <button
-        className="btn btn-primary mt-3"
-        href="/"
-        onClick={submitUsernameAndPass}
-      >
-        Submit
-      </button>
-    </form>
-    <div id="emailHelp" className="form-text text-danger">
-        {error}
+            <button
+              className="btn btn-primary mt-3"
+              href="/"
+              onClick={submitUsernameAndPass}
+            >
+              Submit
+            </button>
+          </form>
+          <div id="emailHelp" className="form-text text-danger">
+            {error}
+          </div>
+        </div>
       </div>
-    </div>
+      <About />
     </>
   );
 };
