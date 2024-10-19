@@ -64,14 +64,14 @@ export const Header = (props) => {
             )}
             <NavDropdown title="Menu" id="basic-nav-dropdown">
               <LinkContainer to="/myprofile">
-              <NavDropdown.Item>My profile</NavDropdown.Item>
+                <NavDropdown.Item>My profile</NavDropdown.Item>
               </LinkContainer>
               <LinkContainer to="/changepassword">
                 <NavDropdown.Item>Reset password</NavDropdown.Item>
               </LinkContainer>
               <NavDropdown.Divider />
               <LinkContainer to="/faq">
-              <NavDropdown.Item>FAQ</NavDropdown.Item>
+                <NavDropdown.Item>FAQ</NavDropdown.Item>
               </LinkContainer>
             </NavDropdown>
           </Nav>

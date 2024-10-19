@@ -44,18 +44,18 @@ function App() {
         />
         <Route
           path="/newticket"
-          element={<NewTicket setMessageOfTheDay={setMessageOfTheDay} />}
+          element={<NewTicket />}
         />
         <Route
           path="/mytickets"
-          element={<MyTickets setMessageOfTheDay={setMessageOfTheDay} />}
+          element={<MyTickets />}
         />
         <Route
           path="/changepassword"
           element={
             <ChangePassword
               loggedIn={loggedIn}
-              setMessageOfTheDay={setMessageOfTheDay}
+
             />
           }
         />
