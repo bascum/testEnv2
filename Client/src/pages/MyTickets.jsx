@@ -77,7 +77,7 @@ const testTickets = [
 export const MyTickets = ({ setMessageOfTheDay }) => {
   let navigate = useNavigate();
 
-  const [myTickets, setMyTickets] = useState(testTickets);
+  const [myTickets, setMyTickets] = useState([]);
 
   const getTickets = async () => {
     let results = await axios.get("/ticket/dashboard/get_tickets");
