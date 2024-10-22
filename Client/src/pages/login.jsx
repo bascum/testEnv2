@@ -18,6 +18,7 @@ export function Login(props) {
         toggleLogged={props.toggleLogged}
         loggedIn={props.loggedIn}
         setMessageOfTheDay={props.setMessageOfTheDay}
+        setCurrentUser={props.setCurrentUser}
       />
     </>
   );

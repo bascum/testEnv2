@@ -13,8 +13,35 @@ router.get('/test', async function (req, res) {
   res.send(response);
 });
 
+router.get("/get_techs", async function (req, res) {
+  let request = new sql.Request();
+  class Tech {
+    constructor(username, name, tickets){
+      this.username = username;
+      this.name = name;
+      this.tickets = tickets;
+    }
+  }
+
+  let respone = {
+    techs: [],
+    success: "",
+    error: ""
+  }
+
+  if(req.session.loggedIn){
+    let queryResponse = await request.query("SELECT * FROM [User] WHERE type = 3");
+  } else {
+    response.success = "no";
+    response.error = "Must be logged in to get techs";
+  }
+
+  res.send(respone);
+})
+
 
 router.post("/create", async function (req, res) {
+  console.log(req.body);
   try {
     if (req.session.loggedIn) {
       /*
@@ -57,6 +84,11 @@ router.post("/create", async function (req, res) {
         request.input('dep_num', sql.Int, req.body.dep_num);
         request.input("name", sql.VarChar(50), req.body.name);
         request.input("type", sql.TinyInt, req.body.type);
+        if (req.body.callback == "") {
+          let _ = await request.query("SELECT callback FROM Department WHERE dep_id = @dep_num")
+          console.log(_.recordset[0]);
+          req.body.callback = parseInt(_.recordset[0].callback);
+        }
         request.input("callback", sql.BigInt, req.body.callback);
         result = await request.query("Select * FROM [User] WHERE username = @username"); //Check for duplicate username
         //console.log(result);
@@ -106,7 +138,7 @@ router.post("/create", async function (req, res) {
         if (!genericError) {
           returnJson = {
             ...returnJson,
-            sucess: "yes",
+            success: "yes",
           }
         }
       }
@@ -170,10 +202,23 @@ router.post("/login", async (req, res) => {
   }
 
   if (genericError) {
-    res.send(false);
+    res.send({
+      success: false,
+      user: {}
+    });
     console.log("NotLoggedIn");
   } else {
-    res.send(true);
+
+
+    res.send({
+      success: true,
+      user: {
+        username: resultUser.username,
+        name: resultUser.name,
+        type: resultUser.type,
+        id: resultUser.employee_id
+      }
+    });
     console.log("LoggedIn")
 
   }

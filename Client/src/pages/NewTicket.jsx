@@ -1,5 +1,4 @@
 import DropdownPrimary from "../components/dropdowns/DropdownPrimary";
-import { Header } from "../components/header/Header";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
