@@ -52,8 +52,10 @@ const LoginForm = (props) => {
         <div className="container text-center col-md-4">
           <form>
             <div className="form-group mb-4">
-              <label htmlFor="exampleInputEmail1">Username</label>
+              <label id="userlabel" htmlFor="userlabel">Username</label>
               <input
+                id="username"
+                autoComplete="username"
                 type="text"
                 className="shadow form-control"
                 aria-label="Username"
@@ -90,7 +92,7 @@ const LoginForm = (props) => {
               Submit
             </button>
           </form>
-          <div id="emailHelp" className="form-text text-danger">
+          <div id="error" className="form-text text-danger">
             {error}
           </div>
         </div>
