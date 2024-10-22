@@ -31,10 +31,10 @@ const LoginForm = (props) => {
     try {
       let result = await axios.post("/user/login", body);
 
-      console.log(result.data);
-      if (result.data == true) {
+      if (result.data.success == true) {
         props.setMessageOfTheDay("Logged in successfully");
         props.toggleLogged();
+        props.setCurrentUser(result.data.user);
         return navigate("/");
       } else if (result.data == false) {
         setError("Incorrect login info");
