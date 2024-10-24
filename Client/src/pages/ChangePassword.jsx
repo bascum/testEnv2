@@ -79,7 +79,7 @@ export function ChangePassword(props) {
               <input
                 type="text"
                 className="shadow form-control"
-                id="formGroupExampleInput"
+                id="formGroupExampleInput1"
                 placeholder="New password"
                 value={password}
                 onChange={onMainPasswordChange}
