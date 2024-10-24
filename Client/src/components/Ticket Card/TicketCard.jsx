@@ -1,7 +1,9 @@
 import React from "react";
 import { Card } from "react-bootstrap";
+import { useState } from "react";
 
 export const TicketCard = ({ ticket }) => {
+
     return (
         <Card style={{ maxWidth: "300px", margin: "auto", height: '500px' }}>
             <Card.Header>Ticket #{ticket.ticket_num}</Card.Header>

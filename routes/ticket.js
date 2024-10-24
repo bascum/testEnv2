@@ -210,7 +210,7 @@ router.post("/create", async (req, res) => {
 router.post("/assign", async (req, res) => {
     /* Input
         {
-            username: "", Username to be assigned to
+            ID: "", Id to be assigned to
             ticket_number: "", Ticket to assign
         }
     */
@@ -238,10 +238,10 @@ router.post("/assign", async (req, res) => {
     } else {
         try {
             console.log(req.body);
-            await request.input ("username", sql.VarChar(50), req.body.username);
+            await request.input ("target_id", sql.Int, req.body.id);
             console.log(req.session.employee);
             await request.input ("requestor_id", sql.Int, req.session.employee.employee_id);
-            let targetEmployee = await request.query("SELECT * FROM [User] WHERE username = @username;");
+            let targetEmployee = await request.query("SELECT * FROM [User] WHERE employee_id = @target_id;");
             let requestor = await request.query("SELECT * FROM [User] WHERE employee_id = @requestor_id;");
             targetEmployee = targetEmployee.recordset[0];
             console.log(targetEmployee);

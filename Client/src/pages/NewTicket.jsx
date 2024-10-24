@@ -84,6 +84,7 @@ export const NewTicket = (props) => {
       let result = await axios.post("/ticket/create", formData);
       console.log(result);
       if (result.data.success == "yes") {
+        console.log("Ticket created")
         props.setMessageOfTheDay(
           `Successfully submitted ticket. Your ticket number is ${result.data.ticket_num}`
         );

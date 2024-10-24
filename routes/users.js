@@ -16,27 +16,50 @@ router.get('/test', async function (req, res) {
 router.get("/get_techs", async function (req, res) {
   let request = new sql.Request();
   class Tech {
-    constructor(username, name, tickets){
+    constructor(username, name, id, tickets){
       this.username = username;
       this.name = name;
       this.tickets = tickets;
+      this.id = id;
     }
   }
 
-  let respone = {
+  let response = {
     techs: [],
     success: "",
     error: ""
   }
 
   if(req.session.loggedIn){
-    let queryResponse = await request.query("SELECT * FROM [User] WHERE type = 3");
+    try {
+      let queryResponse = await request.query(`SELECT * FROM [User] u LEFT JOIN
+      Ticket_Assignment ta on u.employee_id = ta.employee_id
+      WHERE u.type = 3`);
+      queryResponse.recordset.forEach(record => {
+        // Find if the tech already exists in the response.techs array
+        let existingTech = response.techs.find(tech => tech.id === record.employee_id);
+        if (existingTech) {
+          // If the tech exists, just add the ticket number to their tickets array (if it's not null)
+          if (record.ticket_num) {
+            existingTech.tickets.push(record.ticket_num);
+          }
+        } else {
+          // If the tech doesn't exist, create a new Tech object and add it to the response.techs array
+          let newTech = new Tech(record.username, record.name, record.employee_id[0], record.ticket_num ? [record.ticket_num] : []);
+          response.techs.push(newTech);
+        }
+      });
+      response.success = "yes";
+    } catch (err) {
+      response.success = "no";
+      response.error = err;
+    }
   } else {
     response.success = "no";
     response.error = "Must be logged in to get techs";
   }
 
-  res.send(respone);
+  res.send(response);
 })
 
 

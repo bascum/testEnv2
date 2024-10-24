@@ -5,7 +5,7 @@ import { Header } from "./components/header/Header";
 import { Login } from "./pages/login";
 import { NewTicket } from "./pages/NewTicket";
 import { MyTickets } from "./pages/MyTickets";
-import { CreateUser } from "./pages/CreateUser"
+import { CreateUser } from "./pages/CreateUser";
 import { Route, Routes } from "react-router-dom";
 import { useState } from "react";
 import ChangePassword from "./pages/ChangePassword";
@@ -49,13 +49,27 @@ function App() {
             />
           }
         />
-        <Route path="/newticket" element={<NewTicket />} />
-        <Route path="/mytickets" element={<MyTickets />} />
+        <Route
+          path="/newticket"
+          element={<NewTicket setMessageOfTheDay={setMessageOfTheDay} />}
+        />
+        <Route
+          path="/mytickets"
+          element={<MyTickets currentUser={currentUser} />}
+        />
         <Route
           path="/changepassword"
           element={<ChangePassword loggedIn={loggedIn} />}
         />
-        <Route path="create_user" element={<CreateUser loggedIn={loggedIn} setMessageOfTheDay={setMessageOfTheDay} />} />
+        <Route
+          path="create_user"
+          element={
+            <CreateUser
+              loggedIn={loggedIn}
+              setMessageOfTheDay={setMessageOfTheDay}
+            />
+          }
+        />
       </Routes>
     </>
   );

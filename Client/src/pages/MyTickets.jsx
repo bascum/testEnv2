@@ -74,16 +74,17 @@ const testTickets = [
   },
 ];
 
-export const MyTickets = ({ setMessageOfTheDay }) => {
+export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
   let navigate = useNavigate();
 
   const [myTickets, setMyTickets] = useState([]);
+  const [techs, setTechs] = useState([]);
 
   const getTickets = async () => {
     let results = await axios.get("/ticket/dashboard/get_tickets");
     if (results.data.success == "yes") {
       let tickets = results.data.tickets;
-      console.log("Tickets from Get request", tickets);
+      //console.log("Tickets from Get request", tickets);
       setMyTickets(tickets);
     } else {
       setMessageOfTheDay("Error occurred retreiving tickets");
@@ -91,13 +92,55 @@ export const MyTickets = ({ setMessageOfTheDay }) => {
     }
   };
 
+  const convertTechs = (techs) => {
+    return techs.map(tech => {
+        // Destructure the tech object, replacing 'id' with 'value'
+        const { id, ...rest } = tech;
+        return { value: id, ...rest };
+    });
+  }
+
+  const getTechs = async () => {
+    let results = await axios.get("/user/get_techs");
+    if (results.data.success == "yes") {
+      let techs = results.data.techs;
+      //console.log("Techs: ", techs);
+      techs = convertTechs(techs);
+      setTechs(techs);
+    } else {
+      setMessageOfTheDay("Error getting Techs");
+      return navigate("/");
+    }
+  };
+
+  const onAssignment = async (ticket, e) => {
+    //console.log(e);
+    let value = e.target.value;
+    let result = await axios.post("/ticket/assign", {
+      id: value,
+      ticket_number: ticket.ticket_num,
+    });
+    if (result.data.success == "yes"){
+      //console.log("assigned Ticket");
+      getTickets();
+    }
+  };
+
   useEffect(() => {
-    //getTickets();
+    getTickets();
+    getTechs();
   }, []);
 
   return (
     <>
-      <Table striped bordered hover responsive className="mt-4 mx-auto" style={{ maxWidth: "95%" }}>
+      <Table
+        striped
+        bordered
+        hover
+        responsive
+        className="mt-4 mx-auto"
+        style={{ maxWidth: "95%" }}
+      >
         <thead>
           <tr>
             <th>Ticket #</th>
@@ -113,7 +156,15 @@ export const MyTickets = ({ setMessageOfTheDay }) => {
         <tbody>
           {myTickets.length > 0 ? (
             myTickets.map((ticket, index) => {
-              return <TicketRow ticket={ticket} index={index} />;
+              return (
+                <TicketRow
+                  ticket={ticket}
+                  index={index}
+                  currentUser={currentUser}
+                  techs={techs}
+                  onAssignment={(e) => onAssignment(ticket, e)}
+                />
+              );
             })
           ) : (
             <></>
