@@ -41,11 +41,13 @@ router.get("/dashboard/get_tickets", async (req, res) => {
         await request.input("department", sql.Int, req.session.employee.dep_num);
         if (req.session.employee.type == 1) {
             result = await request.query(`
-                SELECT t.ticket_num, t.status, t.printer_num, t.created_on, u1.name, ta.assigned_date, u2.name, t.description
+                SELECT t.ticket_num, t.priority, t.status, t.printer_num, p.make_and_model, p.[location], t.created_on, u1.name, ta.assigned_date, u2.name, t.description, d.name, d.dep_id
                 FROM Ticket t
                 LEFT JOIN [User] u1 ON t.created_by = u1.employee_id
                 LEFT JOIN Ticket_Assignment ta ON t.ticket_num = ta.ticket_num
                 LEFT JOIN [User] u2 ON ta.employee_id = u2.employee_id
+                LEFT JOIN Printer p ON t.printer_num = p.inv_num
+                LEFT JOIN Department d ON p.dep_num = d.dep_id
                 WHERE t.created_by = @employee_id AND t.status != 0
                 ORDER BY t.created_on;
             `)
@@ -56,12 +58,13 @@ router.get("/dashboard/get_tickets", async (req, res) => {
             }
         } else if (req.session.employee.type == 2) { //Dep admins will need to see all tickets for their dep
             let getDepTickets = `
-                SELECT t.ticket_num, t.status, t.printer_num, t.created_on, u1.name, ta.assigned_date, u2.name, t.description
+                SELECT t.ticket_num, t.priority, t.status, t.printer_num, p.make_and_model, p.[location], t.created_on, u1.name, ta.assigned_date, u2.name, t.description, d.name, d.dep_id
                 FROM Ticket t
                 LEFT JOIN [User] u1 ON t.created_by = u1.employee_id
                 LEFT JOIN Ticket_Assignment ta ON t.ticket_num = ta.ticket_num
                 LEFT JOIN [User] u2 ON ta.employee_id = u2.employee_id
                 LEFT JOIN Printer p ON t.printer_num = p.inv_num
+                LEFT JOIN Department d ON p.dep_num = d.dep_id
                 WHERE p.dep_num = @department AND t.status != 0
                 ORDER BY t.created_on;
             `
@@ -76,11 +79,13 @@ router.get("/dashboard/get_tickets", async (req, res) => {
 
         } else if (req.session.employee.type == 3) { //techs will need to see all tickets assigned to them
             getAssignedTickets = `
-                SELECT t.ticket_num, t.status, t.printer_num, t.created_on, u1.name, ta.assigned_date, u2.name, t.description
+                SELECT t.ticket_num, t.priority, t.status, t.printer_num, p.make_and_model, p.[location], t.created_on, u1.name, ta.assigned_date, u2.name, t.description, d.name, d.dep_id
                 FROM Ticket t
                 LEFT JOIN [User] u1 ON t.created_by = u1.employee_id
                 LEFT JOIN Ticket_Assignment ta ON t.ticket_num = ta.ticket_num
                 LEFT JOIN [User] u2 ON ta.employee_id = u2.employee_id
+                LEFT JOIN Printer p ON t.printer_num = p.inv_num
+                LEFT JOIN Department d ON p.dep_num = d.dep_id
                 WHERE ta.employee_id = @employee_id AND t.status != 0
                 ORDER BY t.created_on;
             `;
@@ -96,11 +101,13 @@ router.get("/dashboard/get_tickets", async (req, res) => {
             //New front end view to sort
 
             result = await request.query(`
-                SELECT t.ticket_num, t.status, t.printer_num, t.created_on, u1.name, ta.assigned_date, u2.name, t.description
+                SELECT t.ticket_num, t.priority, t.status, t.printer_num, p.make_and_model, p.[location], t.created_on, u1.name, ta.assigned_date, u2.name, t.description, d.name, d.dep_id
                 FROM Ticket t
                 LEFT JOIN [User] u1 ON t.created_by = u1.employee_id
                 LEFT JOIN Ticket_Assignment ta ON t.ticket_num = ta.ticket_num
                 LEFT JOIN [User] u2 ON ta.employee_id = u2.employee_id
+                LEFT JOIN Printer p ON t.printer_num = p.inv_num
+                LEFT JOIN Department d ON p.dep_num = d.dep_id
                 WHERE t.status != 0
                 ORDER BY t.created_on;
             `)
@@ -267,6 +274,12 @@ router.post("/assign", async (req, res) => {
                     INSERT INTO ticket_assignment (ticket_num, employee_id)
                     VALUES (@ticket_num, @employee_id);
                 END
+
+                UPDATE Ticket
+                SET
+                    status = 2
+                WHERE
+                    ticket_num = @ticket_num;
             `);
 
             console.log("Insert passed");

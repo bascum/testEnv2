@@ -13,23 +13,45 @@ router.get("/get_printers", async (req, res) => {
     }
 
     if (req.session.loggedIn) {
-        try {
-            let request = new sql.Request();
-            await request.input("department", sql.Int, req.session.employee.dep_num);
-            let response = await request.query("SELECT * FROM Printer WHERE dep_num = @department;");
-            if (response.recordset.length > 0) {
-                responseJSON = {
-                    ...responseJSON,
-                    success: "yes",
-                    printers: response.recordset
+        if (req.session.employee.type < 3) {
+            try {
+                let request = new sql.Request();
+                await request.input("department", sql.Int, req.session.employee.dep_num);
+                let response = await request.query("SELECT * FROM Printer WHERE dep_num = @department;");
+                if (response.recordset.length > 0) {
+                    responseJSON = {
+                        ...responseJSON,
+                        success: "yes",
+                        printers: response.recordset
+                    }
                 }
             }
-        }
-        catch (err) {
-            responseJSON = {
-                ...responseJSON,
-                error: err,
-                success: "no",
+            catch (err) {
+                responseJSON = {
+                    ...responseJSON,
+                    error: err,
+                    success: "no",
+                }
+            }
+        } else {
+            try {
+                let request = new sql.Request();
+                await request.input("department", sql.Int, req.session.employee.dep_num);
+                let response = await request.query("SELECT * FROM Printer");
+                if (response.recordset.length > 0) {
+                    responseJSON = {
+                        ...responseJSON,
+                        success: "yes",
+                        printers: response.recordset
+                    }
+                }
+            }
+            catch (err) {
+                responseJSON = {
+                    ...responseJSON,
+                    error: err,
+                    success: "no",
+                }
             }
         }
     } else {

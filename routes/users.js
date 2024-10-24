@@ -13,6 +13,13 @@ router.get('/test', async function (req, res) {
   res.send(response);
 });
 
+router.get("/departments", async function (req, res) {
+  let request = new sql.Request();
+  let response = await request.query("SELECT * FROM Department");
+
+  res.send(response.recordset);
+})
+
 router.get("/get_techs", async function (req, res) {
   let request = new sql.Request();
   class Tech {
@@ -36,8 +43,11 @@ router.get("/get_techs", async function (req, res) {
       Ticket_Assignment ta on u.employee_id = ta.employee_id
       WHERE u.type = 3`);
       queryResponse.recordset.forEach(record => {
+
+        console.log("Record: ", record);
+        console.log(response.techs);
         // Find if the tech already exists in the response.techs array
-        let existingTech = response.techs.find(tech => tech.id === record.employee_id);
+        let existingTech = response.techs.find(tech => tech.id === record.employee_id[0]);
         if (existingTech) {
           // If the tech exists, just add the ticket number to their tickets array (if it's not null)
           if (record.ticket_num) {

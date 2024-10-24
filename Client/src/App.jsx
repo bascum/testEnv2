@@ -62,7 +62,7 @@ function App() {
           element={<ChangePassword loggedIn={loggedIn} />}
         />
         <Route
-          path="create_user"
+          path="/createuser"
           element={
             <CreateUser
               loggedIn={loggedIn}

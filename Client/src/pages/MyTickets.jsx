@@ -102,9 +102,10 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
 
   const getTechs = async () => {
     let results = await axios.get("/user/get_techs");
+    console.log(results.data);
     if (results.data.success == "yes") {
       let techs = results.data.techs;
-      //console.log("Techs: ", techs);
+      console.log("Techs: ", techs);
       techs = convertTechs(techs);
       setTechs(techs);
     } else {

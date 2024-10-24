@@ -74,7 +74,7 @@ export const Header = (props) => {
                 <NavDropdown.Item>FAQ</NavDropdown.Item>
               </LinkContainer>
               {props.currentUser != null ? (props.currentUser.type > 2 ? (
-                <LinkContainer to="/create_user">
+                <LinkContainer to="/createuser">
                 <NavDropdown.Item>Create User</NavDropdown.Item>
               </LinkContainer>
               ) : (<></>)) : (<></>)}

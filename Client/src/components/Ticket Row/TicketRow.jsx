@@ -8,11 +8,18 @@ export const TicketRow = ({
   techs,
   onAssignment,
 }) => {
+  const status = {
+    1: "Open",
+    2: "Assigned",
+    3: "In-Progress",
+    4: "Closed",
+  }
+
   return (
     <>
       <tr key={index}>
         <td>{ticket.ticket_num}</td>
-        <td>{ticket.status === 1 ? "Open" : "Closed"}</td>
+        <td>{status[ticket.status]}</td>
         <td>{ticket.printer_num}</td>
         <td>{new Date(ticket.created_on).toLocaleDateString()}</td>
         <td>{ticket.name && ticket.name[0] ? ticket.name[0] : "Unassigned"}</td>

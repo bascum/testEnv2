@@ -14,12 +14,51 @@ export const CreateUser = ({setMessageOfTheDay, loggedIn}) => {
         name: "",
     });
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
+    const [deps, setDeps] = useState([]);
+    const type = [{
+        name: "Standard User",
+        value: 1
+    }, {
+        name: "Department Head",
+        value: 2
+    }, {
+        name: "Tech",
+        value: 3
+    }, {
+        name: "Super Admin",
+        value: 4
+    }]
+
+    const convertDeps = (deps) => {
+        return deps.map(dep => {
+            // Destructure the dep object, replacing 'id' with 'value'
+            const { dep_id, ...rest } = dep;
+            return { value: dep_id, ...rest };
+        });
+      }
+
+    const getDeps = async () => {
+        let response = await axios.get("/user/departments");
+        if (response.status === 200) {
+            let deps = convertDeps(response.data);
+            console.log("deps", deps)
+            setDeps(deps);
+        }
+    }
+
+    const handleChange = (e, declaredName = "") => {
+        e.preventDefault();
+        console.log(e.target);
+        let { name, value } = e.target;
+        if (declaredName != ""){
+            name = declaredName;
+        }
         setFormData((prevData) => ({
             ...prevData,
             [name]: value,
         }));
+
+        console.log(`${name} changed to ${value}`);
     };
 
     const handleSubmit = async (e) => {
@@ -43,7 +82,9 @@ export const CreateUser = ({setMessageOfTheDay, loggedIn}) => {
         if (!loggedIn) {
             return navigate("/login");
         }
-    }, [])
+
+        getDeps();
+    }, []);
 
     return (
         <div className="container mt-5">
@@ -80,18 +121,10 @@ export const CreateUser = ({setMessageOfTheDay, loggedIn}) => {
                 </div>
 
                 <div className="mb-3">
-                    <label htmlFor="dep_num" className="form-label">
-                        Department Number:
+                    <label htmlFor="name" className="form-label">
+                        Department: 
                     </label>
-                    <input
-                        type="number"
-                        id="dep_num"
-                        name="dep_num"
-                        className="form-control"
-                        value={formData.dep_num}
-                        onChange={handleChange}
-                        required
-                    />
+                    <DropdownPrimary listOfValues={deps ? deps : []} selected={formData.dep_num != 0 ? deps[formData.dep_num - 1].name : "Please Select a Dep"} onSelect={(e) => {handleChange(e, "dep_num")}} />
                 </div>
 
                 <div className="mb-3">
@@ -111,17 +144,9 @@ export const CreateUser = ({setMessageOfTheDay, loggedIn}) => {
 
                 <div className="mb-3">
                     <label htmlFor="type" className="form-label">
-                        Type:
+                        Employee Type:
                     </label>
-                    <input
-                        type="number"
-                        id="type"
-                        name="type"
-                        className="form-control"
-                        value={formData.type}
-                        onChange={handleChange}
-                        required
-                    />
+                    <DropdownPrimary listOfValues={type} selected={formData.type != 0 ? type[formData.type - 1].name : "Please Select a Employee Type"} onSelect={(e) => {handleChange(e, "type")}} />
                 </div>
 
                 <div className="mb-3">
@@ -138,7 +163,7 @@ export const CreateUser = ({setMessageOfTheDay, loggedIn}) => {
                     />
                 </div>
 
-                <button type="submit" className="btn btn-primary">
+                <button type="submit" className="btn btn-primary" key={10000} id="submit-button">
                     Submit
                 </button>
             </form>
