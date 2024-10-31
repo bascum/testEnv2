@@ -12,12 +12,12 @@ export function ChangePassword(props) {
   const [confPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
 
-  let navigate = useNavigate();
-  useEffect(() => {
-    if (!props.loggedIn) {
-      return navigate("/");
-    }
-  }, []);
+  // let navigate = useNavigate();
+  // useEffect(() => {
+  //   if (!props.loggedIn) {
+  //     return navigate("/");
+  //   }
+  // }, []);
 
   const onUsernameChange = (e) => {
     setUsername(e.target.value);

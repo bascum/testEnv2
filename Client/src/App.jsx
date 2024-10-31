@@ -9,6 +9,7 @@ import { CreateUser } from "./pages/CreateUser";
 import { Route, Routes } from "react-router-dom";
 import { useState } from "react";
 import ChangePassword from "./pages/ChangePassword";
+import MyProfile from "./pages/MyProfile";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false); //Use state to ell if a user is logged in. Will be necessary to redirect properly
@@ -48,6 +49,10 @@ function App() {
               setCurrentUser={setCurrentUser}
             />
           }
+        />
+        <Route
+          path="/myprofile"
+          element={<MyProfile currentUser={currentUser} />}
         />
         <Route
           path="/newticket"
