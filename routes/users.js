@@ -364,6 +364,40 @@ router.post("/logout", async (req, res) => {
   }
 })
 
+router.post("/get_profile", async (req, res) => {
+
+  let request = new sql.Request();
+  class Profile {
+    constructor(username, name, employeeID, phoneNumber, departmentNumber){
+      this.username = username;
+      this.name = name;
+      this.employeeID = employeeID;
+      this.phoneNumber = phoneNumber;
+      this.departmentNumber = departmentNumber;
+    }
+  }
+
+  let response = {
+    profile: [],
+    success: "",
+    error: ""
+  }
+  
+  try {
+    // you will need to see how to load the username variable from req.body use the other routes as an example
+    requestSQL.input('username', sql.VarChar(50), req.body.username);
+    let result = await requestSQL.query("select * from [User] where username = @username");
+    let user = result.recordset[0];
+    res.send(user);
+  } catch (err) {
+    // some error handling probably a res. Send and some error object
+    res.send({
+      success: "no",
+      error: err.message
+    });
+  }
+});
+
 router.get("/test_session", async (req, res) => {
   res.send("Not currently set up");
 })
