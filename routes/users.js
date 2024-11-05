@@ -366,9 +366,22 @@ router.post("/logout", async (req, res) => {
 
 router.post("/get_profile", async (req, res) => {
 
-  //this is sloppy as hell cause I’m super busy but it should get rolling
-  
-  let requestSQL = new sql.Request();
+  let request = new sql.Request();
+  class Profile {
+    constructor(username, name, employeeID, phoneNumber, departmentNumber){
+      this.username = username;
+      this.name = name;
+      this.employeeID = employeeID;
+      this.phoneNumber = phoneNumber;
+      this.departmentNumber = departmentNumber;
+    }
+  }
+
+  let response = {
+    profile: [],
+    success: "",
+    error: ""
+  }
   
   try {
     // you will need to see how to load the username variable from req.body use the other routes as an example
