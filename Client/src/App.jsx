@@ -6,6 +6,7 @@ import { Login } from "./pages/login";
 import { NewTicket } from "./pages/NewTicket";
 import { MyTickets } from "./pages/MyTickets";
 import { CreateUser } from "./pages/CreateUser";
+import Faq from "./pages/Faq";
 import { Route, Routes } from "react-router-dom";
 import { useState } from "react";
 import ChangePassword from "./pages/ChangePassword";
@@ -49,6 +50,7 @@ function App() {
             />
           }
         />
+        <Route path="/faq" element={<Faq currentUser={currentUser} />} />
         <Route
           path="/newticket"
           element={<NewTicket setMessageOfTheDay={setMessageOfTheDay} />}
