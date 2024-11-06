@@ -23,7 +23,7 @@ router.get("/departments", async function (req, res) {
 router.get("/get_techs", async function (req, res) {
   let request = new sql.Request();
   class Tech {
-    constructor(username, name, id, tickets){
+    constructor(username, name, id, tickets) {
       this.username = username;
       this.name = name;
       this.tickets = tickets;
@@ -37,7 +37,7 @@ router.get("/get_techs", async function (req, res) {
     error: ""
   }
 
-  if(req.session.loggedIn){
+  if (req.session.loggedIn) {
     try {
       let queryResponse = await request.query(`SELECT * FROM [User] u LEFT JOIN
       Ticket_Assignment ta on u.employee_id = ta.employee_id
@@ -364,11 +364,11 @@ router.post("/logout", async (req, res) => {
   }
 })
 
-router.post("/get_profile", async (req, res) => {
+router.get("/get_profile", async (req, res) => {
 
-  let request = new sql.Request();
+  let requestSQL = new sql.Request();
   class Profile {
-    constructor(username, name, employeeID, phoneNumber, departmentNumber){
+    constructor(username, name, employeeID, phoneNumber, departmentNumber) {
       this.username = username;
       this.name = name;
       this.employeeID = employeeID;
@@ -382,18 +382,30 @@ router.post("/get_profile", async (req, res) => {
     success: "",
     error: ""
   }
-  
-  try {
-    // you will need to see how to load the username variable from req.body use the other routes as an example
-    requestSQL.input('username', sql.VarChar(50), req.body.username);
-    let result = await requestSQL.query("select * from [User] where username = @username");
-    let user = result.recordset[0];
-    res.send(user);
-  } catch (err) {
-    // some error handling probably a res. Send and some error object
+  if (req.session.loggedIn) {
+    try {
+      // you will need to see how to load the username variable from req.body use the other routes as an example
+      requestSQL.input('username', sql.VarChar(50), req.session.employee.username);
+      let result = await requestSQL.query("select * from [User] where username = @username");
+      let user = result.recordset[0];
+      response.profile.push(new Profile(user.username, user.name, user.employee_id, user.def_callback, user.dep_num));
+      res.send({
+        ...response,
+        success: "yes",
+      });
+    } catch (err) {
+      // some error handling probably a res. Send and some error object
+      res.send({
+        ...response,
+        success: "no",
+        error: err.message
+      });
+    }
+  } else {
     res.send({
+      ...response,
       success: "no",
-      error: err.message
+      error: "Must be logged in to get information"
     });
   }
 });

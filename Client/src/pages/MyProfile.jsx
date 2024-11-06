@@ -15,14 +15,14 @@ export const MyProfile = () => {
   }, []);
 
   const getProfile = async () => {
-    let result = (await axios.get("/users/get_profile")).data;
-    if (result.success === "yes") {
+    let result = (await axios.get("/user/get_profile")).data;
+    if (result.success == "yes") {
       setProfile({
-        name: result.name,
-        employeeID: result.employeeID,
-        phoneNumber: result.phoneNumber,
-        username: result.username,
-        departmentNumber: result.departmentNumber
+        name: result.profile[0].name,
+        employeeID: result.profile[0].employeeID,
+        phoneNumber: result.profile[0].phoneNumber,
+        username: result.profile[0].username,
+        departmentNumber: result.profile[0].departmentNumber
       });
     }
   };
