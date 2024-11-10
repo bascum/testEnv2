@@ -177,8 +177,10 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
       outputArr.sort((a, b) => {
         //console.log("a: ", a);
         //console.log("b: ", b);
-        if (a.assigned_date == undefined || b.assigned_date == undefined) {
-          return 0;
+        if (a.assigned_date == undefined) {
+          return 1;
+        } else if (b.assigned_date == undefined) {
+          return -1;
         } else {
           return new Date(a.assigned_date) - new Date(b.assigned_date);
         }
@@ -187,8 +189,10 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
       outputArr.sort((a, b) => {
         //console.log("a: ", a);
         //console.log("b: ", b);
-        if (a.assigned_date == undefined || b.assigned_date == undefined) {
-          return 0;
+        if (a.assigned_date == undefined) {
+          return 1;
+        } else if (b.assigned_date == undefined) {
+          return -1;
         } else {
           return new Date(b.assigned_date) - new Date(a.assigned_date);
         }
@@ -266,7 +270,7 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
     console.log("Shown Tickets: ", shownTickets);
     await getTechs();
     console.log("Techs: ", techs);
-  }
+  };
 
   useEffect(() => {
     startup();
@@ -280,7 +284,7 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
     if (myTickets && myTickets.length > 0) {
       sortTickets();
     }
-  }, [myTickets]);
+  }, [myTickets, filterSettings]);
 
   return (
     <>
