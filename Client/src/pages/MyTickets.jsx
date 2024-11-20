@@ -244,6 +244,22 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
     }
   };
 
+  const handleCommentSubmit = async (ticketNum,commentContent, e) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    let body = {
+      ticket_num: ticketNum,
+      employee_id: currentUser.id,
+      content: commentContent,
+      employee_name: currentUser.name,
+    }
+
+    let results = await axios.post("/ticket/add_comment", body);
+    console.log("Comment: ", results.data);
+    getComments(ticketNum);
+  }
+
   const onAssignment = async (ticket, e) => {
     //console.log(e);
     let value = e.target.value;
@@ -532,6 +548,7 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
                   techs={techs}
                   onAssignment={(e) => onAssignment(ticket, e)}
                   getComments={(e) => getComments(ticket.ticket_num, e)}
+                  handleCommentSubmit={handleCommentSubmit}
                 />
               );
             })
