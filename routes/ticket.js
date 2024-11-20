@@ -305,6 +305,41 @@ router.post("/assign", async (req, res) => {
 
 })
 
+router.post("/get_comments", async (req, res) => {
+    /*
+        source = {
+            ticketNum: int
+        }
+    */
+
+    let responseJSON = {
+        success: "",
+        error: "",
+        comments: []
+    }
+
+    if (req.session.loggedIn){
+        let requestSql = new sql.Request()
+
+        try {
+            await requestSql.input ("ticket_num", sql.Int, req.body.ticketNum);
+
+            let responseSql = await requestSql.query("SELECT * FROM Comment WHERE ticket_num = @ticket_num");
+
+            if (responseSql.recordset.length > 0){
+                responseJSON = {...responseJSON, success: "yes", comments: responseSql.recordset}
+            }
+        } catch (err) {
+            responseJSON = {...responseJSON, success: "no", error: err}
+        }
+    } else {
+        responseJSON = {...responseJSON, success: "no", error: "Must be logged in to getComments"}
+    }
+    console.log("body: ", req.body);
+    console.log("Response: ", responseJSON);
+    res.send(responseJSON);
+})
+
 router.post("/set_in_progress", async (req, res) => {
     
 })
