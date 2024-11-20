@@ -37,10 +37,10 @@ router.get("/dashboard/get_tickets", async (req, res) => {
         let request = new sql.Request();
         let result;
         try {
-        await request.input("employee_id", sql.Int, req.session.employee.employee_id);
-        await request.input("department", sql.Int, req.session.employee.dep_num);
-        if (req.session.employee.type == 1) {
-            result = await request.query(`
+            await request.input("employee_id", sql.Int, req.session.employee.employee_id);
+            await request.input("department", sql.Int, req.session.employee.dep_num);
+            if (req.session.employee.type == 1) {
+                result = await request.query(`
                 SELECT t.ticket_num, t.priority, t.status, t.printer_num, p.make_and_model, p.[location], t.created_on, u1.name, ta.assigned_date, u2.name, t.description, d.name, d.dep_id
                 FROM Ticket t
                 LEFT JOIN [User] u1 ON t.created_by = u1.employee_id
@@ -51,13 +51,13 @@ router.get("/dashboard/get_tickets", async (req, res) => {
                 WHERE t.created_by = @employee_id AND t.status != 0
                 ORDER BY t.created_on;
             `)
-            responseJSON = {
-                ...responseJSON,
-                success: "yes",
-                tickets: result.recordset
-            }
-        } else if (req.session.employee.type == 2) { //Dep admins will need to see all tickets for their dep
-            let getDepTickets = `
+                responseJSON = {
+                    ...responseJSON,
+                    success: "yes",
+                    tickets: result.recordset
+                }
+            } else if (req.session.employee.type == 2) { //Dep admins will need to see all tickets for their dep
+                let getDepTickets = `
                 SELECT t.ticket_num, t.priority, t.status, t.printer_num, p.make_and_model, p.[location], t.created_on, u1.name, ta.assigned_date, u2.name, t.description, d.name, d.dep_id
                 FROM Ticket t
                 LEFT JOIN [User] u1 ON t.created_by = u1.employee_id
@@ -69,16 +69,16 @@ router.get("/dashboard/get_tickets", async (req, res) => {
                 ORDER BY t.created_on;
             `
 
-            result = await request.query(getDepTickets); //May not insert dep variable properly?
-            responseJSON = {
-                ...responseJSON,
-                success: "yes",
-                tickets: result.recordset
-            }
+                result = await request.query(getDepTickets); //May not insert dep variable properly?
+                responseJSON = {
+                    ...responseJSON,
+                    success: "yes",
+                    tickets: result.recordset
+                }
 
 
-        } else if (req.session.employee.type == 3) { //techs will need to see all tickets assigned to them
-            getAssignedTickets = `
+            } else if (req.session.employee.type == 3) { //techs will need to see all tickets assigned to them
+                getAssignedTickets = `
                 SELECT t.ticket_num, t.priority, t.status, t.printer_num, p.make_and_model, p.[location], t.created_on, u1.name, ta.assigned_date, u2.name, t.description, d.name, d.dep_id
                 FROM Ticket t
                 LEFT JOIN [User] u1 ON t.created_by = u1.employee_id
@@ -90,17 +90,17 @@ router.get("/dashboard/get_tickets", async (req, res) => {
                 ORDER BY t.created_on;
             `;
 
-            result = await request.query(getAssignedTickets);
-            responseJSON = {
-                ...responseJSON,
-                success: "yes",
-                tickets: result.recordset
-            }
+                result = await request.query(getAssignedTickets);
+                responseJSON = {
+                    ...responseJSON,
+                    success: "yes",
+                    tickets: result.recordset
+                }
 
-        } else if (req.session.employee.type == 4) { //Super admin will need to see all tickets. Will likely need
-            //New front end view to sort
+            } else if (req.session.employee.type == 4) { //Super admin will need to see all tickets. Will likely need
+                //New front end view to sort
 
-            result = await request.query(`
+                result = await request.query(`
                 SELECT t.ticket_num, t.priority, t.status, t.printer_num, p.make_and_model, p.[location], t.created_on, u1.name, ta.assigned_date, u2.name, t.description, d.name, d.dep_id
                 FROM Ticket t
                 LEFT JOIN [User] u1 ON t.created_by = u1.employee_id
@@ -112,20 +112,20 @@ router.get("/dashboard/get_tickets", async (req, res) => {
                 ORDER BY t.created_on;
             `)
 
+                responseJSON = {
+                    ...responseJSON,
+                    success: "yes",
+                    tickets: result.recordset
+                }
+
+            }
+        } catch (err) {
             responseJSON = {
                 ...responseJSON,
-                success: "yes",
-                tickets: result.recordset
+                success: "no",
+                error: err
             }
-
         }
-    } catch (err) {
-        responseJSON = {
-            ...responseJSON,
-            success: "no",
-            error: err
-        }
-    }
 
     } else {
         responseJSON = {
@@ -245,19 +245,19 @@ router.post("/assign", async (req, res) => {
     } else {
         try {
             console.log(req.body);
-            await request.input ("target_id", sql.Int, req.body.id);
+            await request.input("target_id", sql.Int, req.body.id);
             console.log(req.session.employee);
-            await request.input ("requestor_id", sql.Int, req.session.employee.employee_id);
+            await request.input("requestor_id", sql.Int, req.session.employee.employee_id);
             let targetEmployee = await request.query("SELECT * FROM [User] WHERE employee_id = @target_id;");
             let requestor = await request.query("SELECT * FROM [User] WHERE employee_id = @requestor_id;");
             targetEmployee = targetEmployee.recordset[0];
             console.log(targetEmployee);
             requestor = requestor.recordset[0];
             console.log(requestor);
-            await request.input ("ticket_num", sql.Int, req.body.ticket_number);
-            await request.input ("employee_id", sql.Int, targetEmployee.employee_id);
-            await request.input ("employee_name", sql.VarChar(50), targetEmployee.name);
-            await request.input ("requestor_name", sql.VarChar(50), requestor.name);
+            await request.input("ticket_num", sql.Int, req.body.ticket_number);
+            await request.input("employee_id", sql.Int, targetEmployee.employee_id);
+            await request.input("employee_name", sql.VarChar(50), targetEmployee.name);
+            await request.input("requestor_name", sql.VarChar(50), requestor.name);
             sqlResponse = await request.query(`
                 IF EXISTS (SELECT 1 FROM ticket_assignment WHERE ticket_num = @ticket_num)
                 BEGIN
@@ -305,8 +305,83 @@ router.post("/assign", async (req, res) => {
 
 })
 
+router.post("/get_comments", async (req, res) => {
+    /*
+        source = {
+            ticketNum: int
+        }
+    */
+
+    let responseJSON = {
+        success: "",
+        error: "",
+        comments: []
+    }
+
+    if (req.session.loggedIn) {
+        let requestSql = new sql.Request()
+
+        try {
+            await requestSql.input("ticket_num", sql.Int, req.body.ticketNum);
+
+            let responseSql = await requestSql.query("SELECT * FROM Comment WHERE ticket_num = @ticket_num");
+
+            if (responseSql.recordset.length > 0) {
+                responseJSON = { ...responseJSON, success: "yes", comments: responseSql.recordset }
+            }
+        } catch (err) {
+            responseJSON = { ...responseJSON, success: "no", error: err }
+        }
+    } else {
+        responseJSON = { ...responseJSON, success: "no", error: "Must be logged in to getComments" }
+    }
+    console.log("body: ", req.body);
+    console.log("Response: ", responseJSON);
+    res.send(responseJSON);
+})
+
 router.post("/set_in_progress", async (req, res) => {
-    
+
+})
+
+router.post("/add_comment", async (req, res) => {
+    /* 
+        input = {
+            ticket_num: int,
+            employee_id: int
+            content: str,
+            employee_name: str
+        }
+    */
+
+    let responseJSON = {
+        success: "",
+        error: "",
+    }
+
+    let request = new sql.Request()
+
+    if (req.session.loggedIn) {
+        try {
+            await request.input("ticket_num", sql.Int, req.body.ticket_num);
+            await request.input("employee_id", sql.Int, req.body.employee_id);
+            await request.input("content", sql.Text, req.body.content);
+            await request.input("employee_name", sql.VarChar(50), req.body.employee_name);
+
+            request.query(`INSERT INTO Comment (ticket_num, employee_id, content)
+        VALUES (@ticket_num, @employee_id,
+        CAST(@employee_name AS VARCHAR) + ' Commented: "' + CAST(@content AS VARCHAR(500)) + '." on: ' + CAST(getdate() AS VARCHAR));`
+            );
+
+            responseJSON = { ...responseJSON, success: "yes",}
+        } catch (err) {
+            responseJSON = { ...responseJSON, success: "no", error: err }
+        }
+    } else {
+        responseJSON = { ...responseJSON, success : "no", error: "Must be logged in to make a comment" }
+    }
+
+    res.send(responseJSON);
 })
 
 module.exports = router;

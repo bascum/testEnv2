@@ -11,68 +11,158 @@ import axios from "axios";
 const testTickets = [
   {
     ticket_num: 3,
+    priority: 1,
     status: 2,
     printer_num: 5,
-    created_on: "2024-10-09T15:36:15.133Z",
-    name: ["Bascum Macik", "Bascum Macik"],
-    assigned_date: "2024-10-09T15:36:15.133Z",
+    make_and_model: 5,
+    location: null,
+    created_on: "2024-10-24T18:09:10.190Z",
+    name: ["Bascum Macik", "Test Tech 1", "Marketing"],
+    assigned_date: "2024-11-06T18:27:47.373Z",
+    description: "Need toner ASAP or I will die",
+    dep_id: 4,
   },
   {
     ticket_num: 4,
-    status: 1,
+    priority: 1,
+    status: 2,
     printer_num: 5,
-    created_on: "2024-10-09T15:36:15.133Z",
-    name: ["Bascum Macik", null],
-    assigned_date: null,
+    make_and_model: 5,
+    location: null,
+    created_on: "2024-10-24T18:09:10.190Z",
+    name: ["Bascum Macik", "Test Tech 2", "Marketing"],
+    assigned_date: "2024-11-06T18:27:47.373Z",
+    description: "Need toner ASAP or I will die",
+    dep_id: 4,
   },
   {
     ticket_num: 5,
+    priority: 1,
     status: 1,
     printer_num: 5,
-    created_on: "2024-10-09T15:36:15.133Z",
-    name: ["Bascum Macik", null],
+    make_and_model: 5,
+    location: null,
+    created_on: "2024-10-24T18:09:10.190Z",
+    name: ["Bascum Macik", null, "Marketing"],
     assigned_date: null,
+    description: "Need toner ASAP or I will die",
+    dep_id: 4,
   },
   {
     ticket_num: 6,
-    status: 1,
+    priority: 1,
+    status: 2,
     printer_num: 5,
-    created_on: "2024-10-09T15:36:15.133Z",
-    name: ["Bascum Macik", null],
-    assigned_date: null,
+    make_and_model: 5,
+    location: null,
+    created_on: "2024-10-24T18:09:10.190Z",
+    name: ["Bascum Macik", "Test Tech 2", "Marketing"],
+    assigned_date: "2024-11-06T18:27:47.373Z",
+    description: "Need toner ASAP or I will die",
+    dep_id: 4,
+    comments: [
+      {
+        comment_num: 3,
+        ticket_num: 6,
+        employee_id: 6,
+        content:
+          "Ticket assigned by admin to Test Tech 2 on Oct 24 2024  4:43PM",
+      },
+      {
+        comment_num: 5,
+        ticket_num: 6,
+        employee_id: 6,
+        content:
+          "Ticket assigned by admin to Test Tech 1 on Oct 24 2024  5:33PM",
+      },
+      {
+        comment_num: 11,
+        ticket_num: 6,
+        employee_id: 6,
+        content:
+          "Ticket assigned by admin to Test Tech 2 on Nov  5 2024  2:39AM",
+      },
+    ],
   },
   {
     ticket_num: 7,
-    status: 1,
+    priority: 1,
+    status: 2,
     printer_num: 2,
-    created_on: "2024-10-09T15:36:15.133Z",
-    name: ["admin", null],
-    assigned_date: null,
+    make_and_model: 3,
+    location: null,
+    created_on: "2024-10-24T18:09:10.190Z",
+    name: ["admin", "Test Tech 2", "Human Resources"],
+    assigned_date: "2024-11-06T18:27:47.373Z",
+    description: "Hello",
+    dep_id: 1,
   },
   {
     ticket_num: 8,
-    status: 1,
+    priority: 1,
+    status: 2,
     printer_num: 2,
-    created_on: "2024-10-09T15:36:15.133Z",
-    name: ["admin", null],
-    assigned_date: null,
+    make_and_model: 3,
+    location: null,
+    created_on: "2024-10-24T18:09:10.190Z",
+    name: ["admin", "Test Tech 1", "Human Resources"],
+    assigned_date: "2024-11-06T18:27:47.373Z",
+    description: "Hello",
+    dep_id: 1,
   },
   {
     ticket_num: 9,
-    status: 1,
+    priority: 1,
+    status: 2,
     printer_num: 2,
-    created_on: "2024-10-09T15:36:15.133Z",
-    name: ["admin", null],
-    assigned_date: null,
+    make_and_model: 3,
+    location: null,
+    created_on: "2024-10-24T18:09:10.190Z",
+    name: ["admin", "Test Tech 1", "Human Resources"],
+    assigned_date: "2024-11-06T18:27:47.373Z",
+    description: "hello",
+    dep_id: 1,
   },
   {
     ticket_num: 10,
+    priority: 1,
+    status: 2,
+    printer_num: 2,
+    make_and_model: 3,
+    location: null,
+    created_on: "2024-10-24T18:09:10.190Z",
+    name: ["admin", "Test Tech 1", "Human Resources"],
+    assigned_date: "2024-11-06T18:27:47.373Z",
+    description: "Hello",
+    dep_id: 1,
+  },
+  {
+    ticket_num: 11,
+    priority: 1,
+    status: 2,
+    printer_num: 7,
+    make_and_model: 6,
+    location: null,
+    created_on: "2024-10-24T18:09:10.190Z",
+    name: ["admin", "Test Tech 2", "Human Resources"],
+    assigned_date: "2024-11-08T00:27:01.353Z",
+    description: "Printer is literally on fire and will explode shortly",
+    dep_id: 1,
+  },
+  {
+    ticket_num: 12,
+    priority: 1,
     status: 1,
     printer_num: 2,
-    created_on: "2024-10-09T15:36:15.133Z",
-    name: ["admin", null],
+    make_and_model: 3,
+    location: null,
+    created_on: "2024-10-24T18:09:10.190Z",
+    name: ["admin", null, "Human Resources"],
     assigned_date: null,
+    description: "Need toner",
+    dep_id: 1,
   },
+  // Additional tickets are omitted for brevity.
 ];
 
 export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
@@ -134,6 +224,41 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
       return navigate("/");
     }
   };
+
+  const getComments = async (ticketNum, e) => {
+    let body = { ticketNum: ticketNum };
+    let results = await axios.post("/ticket/get_comments", body);
+    if (results.data.success == "yes") {
+      console.log("Comments: ", results.data.comments);
+      let targetTicket = myTickets.filter(
+        (ticket) => ticket.ticket_num == ticketNum
+      )[0];
+      console.log("TargetTicket: ", targetTicket);
+      targetTicket = { ...targetTicket, comments: results.data.comments };
+      console.log("TargetTicket: ", targetTicket);
+      setMyTickets(
+        myTickets.map((ticket) =>
+          ticket.ticket_num == targetTicket.ticket_num ? targetTicket : ticket
+        )
+      );
+    }
+  };
+
+  const handleCommentSubmit = async (ticketNum,commentContent, e) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    let body = {
+      ticket_num: ticketNum,
+      employee_id: currentUser.id,
+      content: commentContent,
+      employee_name: currentUser.name,
+    }
+
+    let results = await axios.post("/ticket/add_comment", body);
+    console.log("Comment: ", results.data);
+    getComments(ticketNum);
+  }
 
   const onAssignment = async (ticket, e) => {
     //console.log(e);
@@ -277,7 +402,8 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
   }, []);
 
   useEffect(() => {
-    console.log("render");
+    console.log("myTickets: ", myTickets);
+    console.log("shownTickets: ", shownTickets);
   });
 
   useEffect(() => {
@@ -421,6 +547,8 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
                   currentUser={currentUser}
                   techs={techs}
                   onAssignment={(e) => onAssignment(ticket, e)}
+                  getComments={(e) => getComments(ticket.ticket_num, e)}
+                  handleCommentSubmit={handleCommentSubmit}
                 />
               );
             })
