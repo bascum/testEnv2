@@ -414,56 +414,56 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
 
   return (
     <>
-      <Dropdown
-        style={{ marginLeft: "2.5%", marginTop: "2.5%", marginBottom: "0" }}
-        title="This is main drop"
-        autoClose="outside"
-      >
-        <Dropdown.Toggle id="dropdown-basic">Filter</Dropdown.Toggle>
-        <Dropdown.Menu title="Hello there">
-          <Form.Label>Include:</Form.Label>
-          <div>
-            <Form.Check // prettier-ignore
-              type="switch"
-              id="open_Ticket_Switch"
-              label="Open Tickets"
-              name="open"
-              onChange={sortTicketsFilters}
-              checked={filterSettings.includeStatus.open}
-              style={{
-                margin: "8px",
-              }}
-            />
-          </div>
-          <div>
-            <Form.Check // prettier-ignore
-              type="switch"
-              id="assigned_Ticket_Switch"
-              label="Assigned Tickets"
-              name="assigned"
-              onChange={sortTicketsFilters}
-              checked={filterSettings.includeStatus.assigned}
-              value={filterSettings.includeStatus.assigned}
-              style={{
-                margin: "8px",
-              }}
-            />
-          </div>
-          <div>
-            <Form.Check // prettier-ignore
-              type="switch"
-              id="in_progress_Ticket_Switch"
-              label="In-Progress Tickets"
-              name="in_progress"
-              onChange={sortTicketsFilters}
-              checked={filterSettings.includeStatus.in_progress}
-              style={{
-                margin: "8px",
-              }}
-            />
-          </div>
-          <Dropdown.Divider />
-
+      <div className="body">
+        <Dropdown
+          style={{ marginLeft: "2.5%", marginBottom: "0" }}
+          title="This is main drop"
+          autoClose="outside"
+        >
+          <Dropdown.Toggle id="dropdown-basic">Filter</Dropdown.Toggle>
+          <Dropdown.Menu title="Hello there">
+            <Form.Label>Include:</Form.Label>
+            <div>
+              <Form.Check // prettier-ignore
+                type="switch"
+                id="open_Ticket_Switch"
+                label="Open Tickets"
+                name="open"
+                onChange={sortTicketsFilters}
+                checked={filterSettings.includeStatus.open}
+                style={{
+                  margin: "8px",
+                }}
+              />
+            </div>
+            <div>
+              <Form.Check // prettier-ignore
+                type="switch"
+                id="assigned_Ticket_Switch"
+                label="Assigned Tickets"
+                name="assigned"
+                onChange={sortTicketsFilters}
+                checked={filterSettings.includeStatus.assigned}
+                value={filterSettings.includeStatus.assigned}
+                style={{
+                  margin: "8px",
+                }}
+              />
+            </div>
+            <div>
+              <Form.Check // prettier-ignore
+                type="switch"
+                id="in_progress_Ticket_Switch"
+                label="In-Progress Tickets"
+                name="in_progress"
+                onChange={sortTicketsFilters}
+                checked={filterSettings.includeStatus.in_progress}
+                style={{
+                  margin: "8px",
+                }}
+              />
+            </div>
+            <Dropdown.Divider />
           <div style={{ padding: "8px" }}>
             <Form.Label>Sort By:</Form.Label>
             <Form.Check
