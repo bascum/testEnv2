@@ -7,14 +7,7 @@ export function Dashboard(props) {
 
     return (
         <>
-            {props.messageOfTheDay != "" ? (
-                <Alert key={'info'} variant={'info'}>
-                    {props.messageOfTheDay}
-                </Alert>
-            ) : (
-                <></>
-            )}
-            <Home />
+            <Home messageOfTheDay={props.messageOfTheDay} />
         </>
     );
 }
