@@ -384,4 +384,31 @@ router.post("/add_comment", async (req, res) => {
     res.send(responseJSON);
 })
 
+router.post("/set_inprogress", async (req, res) => {
+    /* 
+        input = {
+            ticket_num: int,
+        }
+    */
+
+    let responseJSON = {
+        success : "",
+        error: ""
+    }
+
+    let request = new sql.Request();
+
+    if (req.session.loggedIn && req.session.employee.type > 2) {
+        request.input("ticket_num", sql.Int, req.body.ticket_num);
+        
+    } else {
+        responseJSON.success = "no";
+        responseJSON.error = "Must be logged in as a tech or admin to set a ticket as 'in progress'"
+    }
+
+
+
+    res.send(responseJSON)
+})
+
 module.exports = router;
