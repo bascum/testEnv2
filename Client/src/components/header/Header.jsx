@@ -13,11 +13,11 @@ export const Header = (props) => {
   let navigate = useNavigate();
   let location = useLocation();
 
-  // useEffect(() => {
-  //   if (!props.loggedIn) {
-  //     return navigate("/login");
-  //   }
-  // }, [props.loggedIn, navigate]);
+  useEffect(() => {
+    if (!props.loggedIn) {
+      return navigate("/login");
+    }
+  }, [props.loggedIn, navigate]);
 
   const logOut = async () => {
     let response = await axios.post("/user/logout", {
