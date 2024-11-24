@@ -60,9 +60,6 @@ export function ChangePassword(props) {
       <div className="form text-center">
         <div className="container text-center col-md-4 pt-5">
           <form>
-            {error != "" ? (<Alert key={'info'} variant={'info'}>
-              {error}
-            </Alert>) : <></>}
             <div className="form-group mb-4">
               <label htmlFor="formGroupExampleInput">Enter Username for employee</label>
               <input
@@ -101,6 +98,9 @@ export function ChangePassword(props) {
             <button className="btn btn-primary mt-3" onClick={onsubmit}>
               Submit
             </button>
+            {error != "" ? (<Alert key={'info'} variant={'info'}>
+              {error}
+            </Alert>) : <></>}
           </form>
         </div>
       </div>

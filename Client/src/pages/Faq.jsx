@@ -25,7 +25,7 @@ const Faq = () => {
               data-bs-parent="#accordionExample"
             >
               <div className="accordion-body">
-                To submit a ticket, click on the "Submit Ticket" button on the
+                To submit a ticket, click on the "New" button on the
                 homepage, fill out the required information, and click "Submit".
               </div>
             </div>
