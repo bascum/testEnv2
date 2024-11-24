@@ -1,3 +1,4 @@
+import "./newticket.css";
 import DropdownPrimary from "../components/dropdowns/DropdownPrimary";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -99,9 +100,7 @@ export const NewTicket = (props) => {
   };
 
   return (
-    <div className="container mt-4">
-      <div className="card shadow">
-        <div className="card-body">
+    <div className="body">
           <h5 className="card-title mb-4">Printer Request Form</h5>
           <form onSubmit={handleSubmit}>
             {/* Printer Number */}
@@ -181,8 +180,6 @@ export const NewTicket = (props) => {
             </button>
           </form>
         </div>
-      </div>
-    </div>
   );
 };
 

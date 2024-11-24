@@ -58,7 +58,7 @@ export function ChangePassword(props) {
   return (
     <>
       <div className="form text-center">
-        <div className="container text-center col-md-4">
+        <div className="container text-center col-md-4 pt-5">
           <form>
             {error != "" ? (<Alert key={'info'} variant={'info'}>
               {error}
@@ -104,7 +104,6 @@ export function ChangePassword(props) {
           </form>
         </div>
       </div>
-      <About />
     </>
   );
 };

@@ -1,3 +1,4 @@
+import "./login.css";
 import LoginForm from "../components/forms/LoginForm";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
@@ -14,12 +15,16 @@ export function Login(props) {
 
   return (
     <>
+    <div className="login">
+      <div className="container text-center">
       <LoginForm
         toggleLogged={props.toggleLogged}
         loggedIn={props.loggedIn}
         setMessageOfTheDay={props.setMessageOfTheDay}
         setCurrentUser={props.setCurrentUser}
       />
+      </div>
+    </div>
     </>
   );
 }

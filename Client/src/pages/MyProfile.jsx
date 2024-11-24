@@ -1,3 +1,4 @@
+import "./myprofile.css";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -28,7 +29,7 @@ export const MyProfile = () => {
   };
 
   return (
-    <div className="container m-4">
+    <div className="body">
       <div className="card shadow">
         <div className="card-body">
           <h5 className="card-title mb-4">My Profile</h5>

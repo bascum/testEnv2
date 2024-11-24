@@ -48,7 +48,7 @@ const LoginForm = (props) => {
 
   return (
     <>
-      <div className="form text-center">
+      <div className="form text-center pt-5">
         <div className="container text-center col-md-4">
           <form>
             <div className="form-group mb-4">
@@ -97,7 +97,6 @@ const LoginForm = (props) => {
           </div>
         </div>
       </div>
-      <About />
     </>
   );
 };
