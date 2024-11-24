@@ -288,147 +288,149 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
 
   return (
     <>
-      <Dropdown
-        style={{ marginLeft: "2.5%", marginTop: "2.5%", marginBottom: "0" }}
-        title="This is main drop"
-        autoClose="outside"
-      >
-        <Dropdown.Toggle id="dropdown-basic">Filter</Dropdown.Toggle>
-        <Dropdown.Menu title="Hello there">
-          <Form.Label>Include:</Form.Label>
-          <div>
-            <Form.Check // prettier-ignore
-              type="switch"
-              id="open_Ticket_Switch"
-              label="Open Tickets"
-              name="open"
-              onChange={sortTicketsFilters}
-              checked={filterSettings.includeStatus.open}
-              style={{
-                margin: "8px",
-              }}
-            />
-          </div>
-          <div>
-            <Form.Check // prettier-ignore
-              type="switch"
-              id="assigned_Ticket_Switch"
-              label="Assigned Tickets"
-              name="assigned"
-              onChange={sortTicketsFilters}
-              checked={filterSettings.includeStatus.assigned}
-              value={filterSettings.includeStatus.assigned}
-              style={{
-                margin: "8px",
-              }}
-            />
-          </div>
-          <div>
-            <Form.Check // prettier-ignore
-              type="switch"
-              id="in_progress_Ticket_Switch"
-              label="In-Progress Tickets"
-              name="in_progress"
-              onChange={sortTicketsFilters}
-              checked={filterSettings.includeStatus.in_progress}
-              style={{
-                margin: "8px",
-              }}
-            />
-          </div>
-          <Dropdown.Divider />
+      <div className="body">
+        <Dropdown
+          style={{ marginLeft: "2.5%", marginBottom: "0" }}
+          title="This is main drop"
+          autoClose="outside"
+        >
+          <Dropdown.Toggle id="dropdown-basic">Filter</Dropdown.Toggle>
+          <Dropdown.Menu title="Hello there">
+            <Form.Label>Include:</Form.Label>
+            <div>
+              <Form.Check // prettier-ignore
+                type="switch"
+                id="open_Ticket_Switch"
+                label="Open Tickets"
+                name="open"
+                onChange={sortTicketsFilters}
+                checked={filterSettings.includeStatus.open}
+                style={{
+                  margin: "8px",
+                }}
+              />
+            </div>
+            <div>
+              <Form.Check // prettier-ignore
+                type="switch"
+                id="assigned_Ticket_Switch"
+                label="Assigned Tickets"
+                name="assigned"
+                onChange={sortTicketsFilters}
+                checked={filterSettings.includeStatus.assigned}
+                value={filterSettings.includeStatus.assigned}
+                style={{
+                  margin: "8px",
+                }}
+              />
+            </div>
+            <div>
+              <Form.Check // prettier-ignore
+                type="switch"
+                id="in_progress_Ticket_Switch"
+                label="In-Progress Tickets"
+                name="in_progress"
+                onChange={sortTicketsFilters}
+                checked={filterSettings.includeStatus.in_progress}
+                style={{
+                  margin: "8px",
+                }}
+              />
+            </div>
+            <Dropdown.Divider />
 
-          <div style={{ padding: "8px" }}>
-            <Form.Label>Sort By:</Form.Label>
-            <Form.Check
-              type="radio"
-              id="ascendingCreationDate"
-              label="Ascending Creation Date"
-              name="sortBy"
-              onChange={sortTicketsSorting} // Updated function
-              checked={filterSettings.sortBy.ascendingCreationDate}
-            />
-            <Form.Check
-              type="radio"
-              id="descendingCreationDate"
-              label="Descending Creation Date"
-              name="sortBy"
-              onChange={sortTicketsSorting} // Updated function
-              checked={filterSettings.sortBy.descendingCreationDate}
-            />
-            <Form.Check
-              type="radio"
-              id="ascendingAssignmentDate"
-              label="Ascending Assignment Date"
-              name="sortBy"
-              onChange={sortTicketsSorting} // Updated function
-              checked={filterSettings.sortBy.ascendingAssignmentDate}
-            />
-            <Form.Check
-              type="radio"
-              id="descendingAssignmentDate"
-              label="Descending Assignment Date"
-              name="sortBy"
-              onChange={sortTicketsSorting} // Updated function
-              checked={filterSettings.sortBy.descendingAssignmentDate}
-            />
-            <Form.Check
-              type="radio"
-              id="printerNumAscending"
-              label="Printer Number Ascending"
-              name="sortBy"
-              onChange={sortTicketsSorting} // Updated function
-              checked={filterSettings.sortBy.printerNumAscending}
-            />
-            <Form.Check
-              type="radio"
-              id="printerNumDescending"
-              label="Printer Number Descending"
-              name="sortBy"
-              onChange={sortTicketsSorting} // Updated function
-              checked={filterSettings.sortBy.printerNumDescending}
-            />
-          </div>
-        </Dropdown.Menu>
-      </Dropdown>
-      <Table
-        striped
-        bordered
-        hover
-        responsive
-        className="mt-4 mx-auto"
-        style={{ maxWidth: "95%" }}
-      >
-        <thead>
-          <tr>
-            <th>Ticket #</th>
-            <th>Status</th>
-            <th>Printer Number</th>
-            <th>Created On</th>
-            <th>Created By</th>
-            <th>Assigned To</th>
-            <th>Assigned Date</th>
-            <th>Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          {myTickets.length > 0 ? (
-            shownTickets.map((ticket, index) => {
-              return (
-                <TicketRow
-                  ticket={ticket}
-                  index={index}
-                  currentUser={currentUser}
-                  techs={techs}
-                  onAssignment={(e) => onAssignment(ticket, e)}
-                />
-              );
-            })
-          ) : (
-            <></>
-          )}
-        </tbody>
-      </Table>
+            <div style={{ padding: "8px" }}>
+              <Form.Label>Sort By:</Form.Label>
+              <Form.Check
+                type="radio"
+                id="ascendingCreationDate"
+                label="Ascending Creation Date"
+                name="sortBy"
+                onChange={sortTicketsSorting} // Updated function
+                checked={filterSettings.sortBy.ascendingCreationDate}
+              />
+              <Form.Check
+                type="radio"
+                id="descendingCreationDate"
+                label="Descending Creation Date"
+                name="sortBy"
+                onChange={sortTicketsSorting} // Updated function
+                checked={filterSettings.sortBy.descendingCreationDate}
+              />
+              <Form.Check
+                type="radio"
+                id="ascendingAssignmentDate"
+                label="Ascending Assignment Date"
+                name="sortBy"
+                onChange={sortTicketsSorting} // Updated function
+                checked={filterSettings.sortBy.ascendingAssignmentDate}
+              />
+              <Form.Check
+                type="radio"
+                id="descendingAssignmentDate"
+                label="Descending Assignment Date"
+                name="sortBy"
+                onChange={sortTicketsSorting} // Updated function
+                checked={filterSettings.sortBy.descendingAssignmentDate}
+              />
+              <Form.Check
+                type="radio"
+                id="printerNumAscending"
+                label="Printer Number Ascending"
+                name="sortBy"
+                onChange={sortTicketsSorting} // Updated function
+                checked={filterSettings.sortBy.printerNumAscending}
+              />
+              <Form.Check
+                type="radio"
+                id="printerNumDescending"
+                label="Printer Number Descending"
+                name="sortBy"
+                onChange={sortTicketsSorting} // Updated function
+                checked={filterSettings.sortBy.printerNumDescending}
+              />
+            </div>
+          </Dropdown.Menu>
+        </Dropdown>
+        <Table
+          striped
+          bordered
+          hover
+          responsive
+          className="mt-4 mx-auto"
+          style={{ maxWidth: "95%" }}
+        >
+          <thead>
+            <tr>
+              <th>Ticket #</th>
+              <th>Status</th>
+              <th>Printer Number</th>
+              <th>Created On</th>
+              <th>Created By</th>
+              <th>Assigned To</th>
+              <th>Assigned Date</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            {myTickets.length > 0 ? (
+              shownTickets.map((ticket, index) => {
+                return (
+                  <TicketRow
+                    ticket={ticket}
+                    index={index}
+                    currentUser={currentUser}
+                    techs={techs}
+                    onAssignment={(e) => onAssignment(ticket, e)}
+                  />
+                );
+              })
+            ) : (
+              <></>
+            )}
+          </tbody>
+        </Table>
+      </div>
     </>
   );
 };
