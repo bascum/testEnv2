@@ -15,7 +15,6 @@ export function Dashboard(props) {
                 <></>
             )}
             <Home />
-            <About />
         </>
     );
 }

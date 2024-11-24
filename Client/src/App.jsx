@@ -11,6 +11,7 @@ import { Route, Routes } from "react-router-dom";
 import { useState } from "react";
 import ChangePassword from "./pages/ChangePassword";
 import MyProfile from "./pages/MyProfile";
+import { Container } from "react-bootstrap";
 
 const testUser = {
   username: "admin",
@@ -30,7 +31,7 @@ function App() {
   };
 
   return (
-    <>
+    <div className="main">
       <Header
         loggedIn={loggedIn}
         toggleLogged={toggleLogged}
@@ -85,7 +86,7 @@ function App() {
           }
         />
       </Routes>
-    </>
+    </div>
   );
 }
 
