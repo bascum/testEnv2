@@ -70,7 +70,7 @@ function App() {
         />
         <Route
           path="/mytickets"
-          element={<MyTickets currentUser={currentUser} />}
+          element={<MyTickets currentUser={currentUser} setMessageOfTheDay={setMessageOfTheDay} />}
         />
         <Route
           path="/changepassword"
