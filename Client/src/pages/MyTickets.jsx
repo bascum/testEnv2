@@ -190,11 +190,69 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
     },
   });
 
+  const setOneTicket = async (ticketNum, comments) => {
+    //console.log("setOneTicket: \nTicketNum: ", ticketNum);
+    //console.log("setOneTicket: \nComemnts: ", comments);
+    try
+    {
+      let result = await axios.post("/ticket/one_ticket", {ticket_num: ticketNum});
+
+      if (result.data.success == "yes"){
+        let targetTicket = result.data.ticket;
+        targetTicket = { ...targetTicket, comments: comments };
+        let newTickets = myTickets.map((ticket) =>
+          ticket.ticket_num == targetTicket.ticket_num ? targetTicket : ticket
+        );
+        setMyTickets(newTickets);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  const closeTicket = async (ticket, content, e) => {
+    try {
+      //console.log("closeTicket");
+      e.stopPropagation();
+      e.preventDefault();
+      let result = await axios.post("/ticket/close", {
+        ticket_num: ticket.ticket_num,
+        content: content,
+      });
+
+      if (result.data.success == "yes") {
+        await getComments(ticket.ticket_num);
+        return false;
+      } else {
+        return result.data.error;
+      }
+    } catch (err) {
+      //console.log("Hit an error", err);
+    }
+  };
+
+  const setInProgress = async (ticket, e) => {
+    //console.log("setInProgress");
+    e.stopPropagation();
+    e.preventDefault();
+    let result = await axios.post("/ticket/set_inprogress", {
+      ticket_num: ticket.ticket_num,
+    });
+    //console.log(result.data);
+    if (result.data.success == "yes") {
+      await getComments(ticket.ticket_num);
+      return false;
+    } else {
+      return result.data.error;
+    }
+  };
+
   const getTickets = async () => {
+    //console.log("GetTickets");
     let results = await axios.get("/ticket/dashboard/get_tickets");
     if (results.data.success == "yes") {
       let tickets = results.data.tickets;
-      //console.log("Tickets from Get request", tickets);
+      ////console.log("Tickets from Get request", tickets);
       setMyTickets(tickets);
       setShownTickets(tickets);
     } else {
@@ -204,6 +262,7 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
   };
 
   const convertTechs = (techs) => {
+    //console.log("converTechs");
     return techs.map((tech) => {
       // Destructure the tech object, replacing 'id' with 'value'
       const { id, ...rest } = tech;
@@ -212,6 +271,7 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
   };
 
   const getTechs = async () => {
+    //console.log("GetTechs");
     let results = await axios.get("/user/get_techs");
     //console.log(results.data);
     if (results.data.success == "yes") {
@@ -226,25 +286,16 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
   };
 
   const getComments = async (ticketNum, e) => {
+    //console.log("GetComments: \nTicketNum: ", ticketNum);
     let body = { ticketNum: ticketNum };
     let results = await axios.post("/ticket/get_comments", body);
     if (results.data.success == "yes") {
-      console.log("Comments: ", results.data.comments);
-      let targetTicket = myTickets.filter(
-        (ticket) => ticket.ticket_num == ticketNum
-      )[0];
-      console.log("TargetTicket: ", targetTicket);
-      targetTicket = { ...targetTicket, comments: results.data.comments };
-      console.log("TargetTicket: ", targetTicket);
-      setMyTickets(
-        myTickets.map((ticket) =>
-          ticket.ticket_num == targetTicket.ticket_num ? targetTicket : ticket
-        )
-      );
+      setOneTicket(ticketNum, results.data.comments);
     }
   };
 
-  const handleCommentSubmit = async (ticketNum,commentContent, e) => {
+  const handleCommentSubmit = async (ticketNum, commentContent, e) => {
+    //console.log("handleCommentSubmit");
     e.stopPropagation();
     e.preventDefault();
 
@@ -253,12 +304,12 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
       employee_id: currentUser.id,
       content: commentContent,
       employee_name: currentUser.name,
-    }
+    };
 
     let results = await axios.post("/ticket/add_comment", body);
-    console.log("Comment: ", results.data);
+    //console.log("Comment: ", results.data);
     getComments(ticketNum);
-  }
+  };
 
   const onAssignment = async (ticket, e) => {
     //console.log(e);
@@ -391,10 +442,10 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
 
   const startup = async () => {
     await getTickets();
-    console.log("Tickets: ", myTickets);
-    console.log("Shown Tickets: ", shownTickets);
+    //console.log("Tickets: ", myTickets);
+    //console.log("Shown Tickets: ", shownTickets);
     await getTechs();
-    console.log("Techs: ", techs);
+    //console.log("Techs: ", techs);
   };
 
   useEffect(() => {
@@ -402,9 +453,8 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
   }, []);
 
   useEffect(() => {
-    console.log("myTickets: ", myTickets);
-    console.log("shownTickets: ", shownTickets);
-  });
+    //console.log("Render due to getTickets()");
+  }, [myTickets]);
 
   useEffect(() => {
     if (myTickets && myTickets.length > 0) {
@@ -412,58 +462,58 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
     }
   }, [myTickets, filterSettings]);
 
-    return (
-      <>
-        <div className="body">
-          <Dropdown
-            style={{ marginLeft: "2.5%", marginBottom: "0" }}
-            title="This is main drop"
-            autoClose="outside"
-          >
-            <Dropdown.Toggle id="dropdown-basic">Filter</Dropdown.Toggle>
-            <Dropdown.Menu title="Hello there">
-              <Form.Label>Include:</Form.Label>
-              <div>
-                <Form.Check // prettier-ignore
-                  type="switch"
-                  id="open_Ticket_Switch"
-                  label="Open Tickets"
-                  name="open"
-                  onChange={sortTicketsFilters}
-                  checked={filterSettings.includeStatus.open}
-                  style={{
-                    margin: "8px",
-                  }}
-                />
-              </div>
-              <div>
-                <Form.Check // prettier-ignore
-                  type="switch"
-                  id="assigned_Ticket_Switch"
-                  label="Assigned Tickets"
-                  name="assigned"
-                  onChange={sortTicketsFilters}
-                  checked={filterSettings.includeStatus.assigned}
-                  value={filterSettings.includeStatus.assigned}
-                  style={{
-                    margin: "8px",
-                  }}
-                />
-              </div>
-              <div>
-                <Form.Check // prettier-ignore
-                  type="switch"
-                  id="in_progress_Ticket_Switch"
-                  label="In-Progress Tickets"
-                  name="in_progress"
-                  onChange={sortTicketsFilters}
-                  checked={filterSettings.includeStatus.in_progress}
-                  style={{
-                    margin: "8px",
-                  }}
-                />
-              </div>
-              <Dropdown.Divider />
+  return (
+    <>
+      <div className="body">
+        <Dropdown
+          style={{ marginLeft: "2.5%", marginBottom: "0" }}
+          title="This is main drop"
+          autoClose="outside"
+        >
+          <Dropdown.Toggle id="dropdown-basic">Filter</Dropdown.Toggle>
+          <Dropdown.Menu title="Hello there">
+            <Form.Label>Include:</Form.Label>
+            <div>
+              <Form.Check // prettier-ignore
+                type="switch"
+                id="open_Ticket_Switch"
+                label="Open Tickets"
+                name="open"
+                onChange={sortTicketsFilters}
+                checked={filterSettings.includeStatus.open}
+                style={{
+                  margin: "8px",
+                }}
+              />
+            </div>
+            <div>
+              <Form.Check // prettier-ignore
+                type="switch"
+                id="assigned_Ticket_Switch"
+                label="Assigned Tickets"
+                name="assigned"
+                onChange={sortTicketsFilters}
+                checked={filterSettings.includeStatus.assigned}
+                value={filterSettings.includeStatus.assigned}
+                style={{
+                  margin: "8px",
+                }}
+              />
+            </div>
+            <div>
+              <Form.Check // prettier-ignore
+                type="switch"
+                id="in_progress_Ticket_Switch"
+                label="In-Progress Tickets"
+                name="in_progress"
+                onChange={sortTicketsFilters}
+                checked={filterSettings.includeStatus.in_progress}
+                style={{
+                  margin: "8px",
+                }}
+              />
+            </div>
+            <Dropdown.Divider />
             <div style={{ padding: "8px" }}>
               <Form.Label>Sort By:</Form.Label>
               <Form.Check
@@ -549,6 +599,8 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
                     onAssignment={(e) => onAssignment(ticket, e)}
                     getComments={(e) => getComments(ticket.ticket_num, e)}
                     handleCommentSubmit={handleCommentSubmit}
+                    setInProgress={setInProgress}
+                    closeTicket={closeTicket}
                   />
                 );
               })
@@ -558,8 +610,8 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
           </tbody>
         </Table>
       </div>
-      </>
-    );
-  };
+    </>
+  );
+};
 
 export default MyTickets;

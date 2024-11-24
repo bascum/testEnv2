@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 
 function DropdownPrimary({ listOfValues, selected, onSelect }) {
   return (
-    <DropdownButton id="dropdown-basic-button" title={selected}>
+    <DropdownButton id="dropdown-basic-button" title={selected} onClick={(e) => e.stopPropagation()}>
       {listOfValues && listOfValues.length > 0 ? (
         listOfValues.map(({ name, value }) => (
           <Dropdown.Item
