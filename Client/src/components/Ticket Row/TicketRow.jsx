@@ -1,7 +1,8 @@
-import Table from "react-bootstrap/Table";
 import DropdownPrimary from "../dropdowns/DropdownPrimary";
+import Popup from "reactjs-popup";
+import "reactjs-popup/dist/index.css";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const TicketRow = ({
   ticket,
@@ -10,8 +11,11 @@ export const TicketRow = ({
   techs,
   onAssignment,
   getComments,
-  handleCommentSubmit
+  handleCommentSubmit,
+  setInProgress,
+  closeTicket,
 }) => {
+  try{
   const status = {
     1: "Open",
     2: "Assigned",
@@ -20,19 +24,39 @@ export const TicketRow = ({
   };
 
   const [selected, setSelected] = useState(false);
-  const [commentContent, setCommentContent] = useState('');
+  const [commentContent, setCommentContent] = useState("");
+  const [closeTicketContent, setCloseTicketContent] = useState("");
+  const [ticketNum, setTicketNum] = useState(-1);
+
+  const handleCloseTicketContentChange = (e) => {
+    e.stopPropagation();
+    setCloseTicketContent(e.target.value);
+  };
 
   const handleCommentChange = (e) => {
     e.stopPropagation();
     setCommentContent(e.target.value);
-  }
-
-
+  };
 
   const handleClick = (e) => {
+    try{
     setSelected(!selected);
     getComments(e);
+    } catch (err) {
+      //console.log("handleclick: ", err);
+    }
   };
+
+  const checkTicketNum = () => {
+    if (ticketNum == -1){
+      setTicketNum(0);
+    } else if (ticketNum != ticket.ticket_num) {
+      setTicketNum(ticket.ticket_num);
+      setSelected(false);
+    }
+  }
+
+  useEffect(() => {checkTicketNum();})
 
   return (
     <>
@@ -134,7 +158,6 @@ export const TicketRow = ({
                     ) : (
                       <></>
                     )}
-                    <p>
                       <label htmlFor={`add-comment-${ticket.ticket_num}`}>
                         <strong>Add Comment:</strong>
                       </label>
@@ -150,15 +173,20 @@ export const TicketRow = ({
                         />
                         <button
                           className="btn btn-primary"
-                          onClick={(e) => handleCommentSubmit(ticket.ticket_num, commentContent, e)}
+                          onClick={(e) =>
+                            handleCommentSubmit(
+                              ticket.ticket_num,
+                              commentContent,
+                              e
+                            )
+                          }
                         >
                           Submit
                         </button>
                       </div>
-                    </p>
                   </div>
                 </div>
-                {currentUser.type > 2 && (
+                {currentUser.type > 2 ? (
                   <div className="row">
                     <div className="col-md-6">
                       <DropdownPrimary
@@ -172,12 +200,79 @@ export const TicketRow = ({
                       />
                     </div>
                   </div>
+                ) : (
+                  <></>
                 )}
               </div>
+              {currentUser.type > 2 ? (
+                <>
+                  <hr />
+                  <div className="row">
+                    <div className="col">
+                      {ticket.status < 3 ? (
+                        <button
+                          className="btn btn-primary"
+                          onClick={(e) => setInProgress(ticket, e)}
+                        >
+                          Set as In-Progress
+                        </button>
+                      ) : (
+                        <></>
+                      )}
+                    </div>
+                    <div className="col"></div>
+                    <div className="col">
+                      {currentUser.type > 2 ? (
+                        ticket.status == 3 || currentUser.type == 4 ? (
+                          <Popup
+                            trigger={
+                              <button className="btn btn-primary">
+                                {" "}
+                                Close
+                              </button>
+                            }
+                            position="right center"
+                          >
+                            <div>
+                              <h4>Please enter a closing comment</h4>
+                              <form>
+                                <input
+                                  type="text"
+                                  name="inputBox"
+                                  placeholder="Enter Closing Comment"
+                                  className="form-control mb-2"
+                                  value={closeTicketContent}
+                                  onChange={handleCloseTicketContentChange}
+                                />
+                                <button
+                                  className="btn btn-primary"
+                                  onClick={(e) =>
+                                    closeTicket(ticket, closeTicketContent, e)
+                                  }
+                                >
+                                  Close
+                                </button>
+                              </form>
+                            </div>
+                          </Popup>
+                        ) : (
+                          <></>
+                        )
+                      ) : (
+                        <></>
+                      )}
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <></>
+              )}
             </td>
           </tr>
         </>
       )}
     </>
-  );
+  );} catch (err) {
+    console.log(err)
+  }
 };

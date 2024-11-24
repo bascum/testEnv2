@@ -335,8 +335,8 @@ router.post("/get_comments", async (req, res) => {
     } else {
         responseJSON = { ...responseJSON, success: "no", error: "Must be logged in to getComments" }
     }
-    console.log("body: ", req.body);
-    console.log("Response: ", responseJSON);
+    //console.log("body: ", req.body);
+    //console.log("Response: ", responseJSON);
     res.send(responseJSON);
 })
 
@@ -365,7 +365,7 @@ router.post("/add_comment", async (req, res) => {
         try {
             await request.input("ticket_num", sql.Int, req.body.ticket_num);
             await request.input("employee_id", sql.Int, req.body.employee_id);
-            await request.input("content", sql.Text, req.body.content);
+            await request.input("content", sql.VarChar(500), req.body.content);
             await request.input("employee_name", sql.VarChar(50), req.body.employee_name);
 
             request.query(`INSERT INTO Comment (ticket_num, employee_id, content)
@@ -373,15 +373,157 @@ router.post("/add_comment", async (req, res) => {
         CAST(@employee_name AS VARCHAR) + ' Commented: "' + CAST(@content AS VARCHAR(500)) + '." on: ' + CAST(getdate() AS VARCHAR));`
             );
 
-            responseJSON = { ...responseJSON, success: "yes",}
+            responseJSON = { ...responseJSON, success: "yes", }
         } catch (err) {
             responseJSON = { ...responseJSON, success: "no", error: err }
         }
     } else {
-        responseJSON = { ...responseJSON, success : "no", error: "Must be logged in to make a comment" }
+        responseJSON = { ...responseJSON, success: "no", error: "Must be logged in to make a comment" }
     }
 
     res.send(responseJSON);
 })
+
+router.post("/set_inprogress", async (req, res) => {
+    /*
+        input = {
+            ticket_num: int,
+        }
+    */
+
+    let responseJSON = {
+        success: "",
+        error: ""
+    }
+
+    console.log("Req.body: ", req.body)
+
+    let request = new sql.Request();
+
+    if (req.session.loggedIn && req.session.employee.type > 2) {
+        try {
+            await request.input("employee_name", sql.VarChar(50), req.session.employee.name);
+            await request.input("ticket_num", sql.Int, req.body.ticket_num);
+            await request.input("employee_id", sql.Int, req.session.employee.employee_id);
+            let ticket = await request.query("SELECT * FROM Ticket WHERE ticket_num = @ticket_num");
+            ticket = ticket.recordset[0];
+            console.log("ticket: ", ticket);
+            if (ticket.status == 2) {
+                await request.query(`UPDATE Ticket
+                                    SET status = 3
+                                    wHERE ticket_num = @ticket_num`);
+            }
+
+            await request.query(`INSERT INTO Comment (ticket_num, employee_id, content)
+                                VALUES (@ticket_num, @employee_id,
+                                CAST(@employee_name AS VARCHAR) + ' Started work on this ticket on: ' + CAST(getdate() AS VARCHAR));`);
+
+            responseJSON = { success: "yes", error: "" };
+        } catch (err) {
+            responseJSON = { success: "no", error: err }
+        }
+    } else {
+        responseJSON.success = "no";
+        responseJSON.error = "Must be logged in as a tech or admin to set a ticket as 'in progress'"
+    }
+
+
+
+    res.send(responseJSON)
+})
+
+router.post("/close", async (req, res) => {
+
+    /* 
+    input = {
+        ticket_num: int,
+        content: str,
+    }
+*/
+
+    let responseJSON = {
+        success: "",
+        error: ""
+    }
+
+    let request = new sql.Request();
+
+    if (req.session.loggedIn && req.session.employee.type > 2) {
+
+        try {
+            await request.input("employee_name", sql.VarChar(50), req.session.employee.name);
+            await request.input("ticket_num", sql.Int, req.body.ticket_num);
+            await request.input("employee_id", sql.Int, req.session.employee.employee_id);
+            await request.input("content", sql.VarChar(500), req.body.content);
+
+            let ticket = (await request.query("SELECT * FROM Ticket WHERE ticket_num = @ticket_num;")).recordset[0];
+            if (ticket.status != 4) {
+                await request.query(`UPDATE Ticket
+                                    SET status = 4
+                                    wHERE ticket_num = @ticket_num;`);
+            }
+
+            await request.query(`INSERT INTO Comment (ticket_num, employee_id, content)
+                                VALUES (@ticket_num, @employee_id,
+                                CAST(@employee_name AS VARCHAR) + ' Closed this ticket on: ' + CAST(getdate() AS VARCHAR) + ' With the Comment: ' + CAST(@content AS VARCHAR(500)))`);
+
+            responseJSON = { success: "yes", error: "" };
+        } catch (err) {
+            responseJSON = { success: "no", error: err };
+        }
+
+    } else {
+        responseJSON.success = "no";
+        responseJSON.error = "Must be logged in as a tech or admin to close ticket"
+    }
+
+
+
+    res.send(responseJSON)
+})
+
+router.post("/one_ticket", async (req, res) => {
+    /*
+        input = {
+            ticket_num: int,
+        }
+    */
+
+    let responseJSON = {
+        success: "",
+        error: ""
+    }
+
+    console.log("Req.body: ", req.body)
+
+    let request = new sql.Request();
+
+    if (req.session.loggedIn && req.session.employee.type > 2) {
+        try {
+            await request.input("employee_name", sql.VarChar(50), req.session.employee.name);
+            await request.input("ticket_num", sql.Int, req.body.ticket_num);
+            await request.input("employee_id", sql.Int, req.session.employee.employee_id);
+            let ticket = await request.query(`                SELECT t.ticket_num, t.priority, t.status, t.printer_num, p.make_and_model, p.[location], t.created_on, u1.name, ta.assigned_date, u2.name, t.description, d.name, d.dep_id
+            FROM Ticket t
+            LEFT JOIN [User] u1 ON t.created_by = u1.employee_id
+            LEFT JOIN Ticket_Assignment ta ON t.ticket_num = ta.ticket_num
+            LEFT JOIN [User] u2 ON ta.employee_id = u2.employee_id
+            LEFT JOIN Printer p ON t.printer_num = p.inv_num
+            LEFT JOIN Department d ON p.dep_num = d.dep_id
+            WHERE t.ticket_num = @ticket_num
+            ORDER BY t.created_on;`);
+            ticket = ticket.recordset[0];
+
+            responseJSON.success = "yes";
+            responseJSON.ticket = ticket;
+        } catch (err) {
+            responseJSON = { success: "no", error: err }
+        }
+    } else {
+        responseJSON = { success: "no", error: "Must be logged in to get tickets" }
+    }
+
+    res.send(responseJSON);
+});
 
 module.exports = router;
