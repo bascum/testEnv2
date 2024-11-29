@@ -87,9 +87,9 @@ export const TicketRow = ({
             </td>
           )}
           <td>
-            {ticket.assigned_date
-              ? new Date(ticket.assigned_date).toLocaleDateString()
-              : "N/A"}
+            {ticket.type == 1
+              ? "Toner"
+              : "Service"}
           </td>
           <td>
             {ticket.description

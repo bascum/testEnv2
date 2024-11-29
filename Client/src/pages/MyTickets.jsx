@@ -12,8 +12,9 @@ const testTickets = [
   {
     ticket_num: 3,
     priority: 1,
-    status: 2,
+    status: 4,
     printer_num: 5,
+    type: 1,
     make_and_model: 5,
     location: null,
     created_on: "2024-10-24T18:09:10.190Z",
@@ -25,8 +26,9 @@ const testTickets = [
   {
     ticket_num: 4,
     priority: 1,
-    status: 2,
+    status: 4,
     printer_num: 5,
+    type: 1,
     make_and_model: 5,
     location: null,
     created_on: "2024-10-24T18:09:10.190Z",
@@ -38,21 +40,23 @@ const testTickets = [
   {
     ticket_num: 5,
     priority: 1,
-    status: 1,
+    status: 4,
     printer_num: 5,
+    type: 1,
     make_and_model: 5,
     location: null,
     created_on: "2024-10-24T18:09:10.190Z",
-    name: ["Bascum Macik", null, "Marketing"],
-    assigned_date: null,
+    name: ["Bascum Macik", "Test Tech 1", "Marketing"],
+    assigned_date: "2024-11-24T18:55:46.467Z",
     description: "Need toner ASAP or I will die",
     dep_id: 4,
   },
   {
     ticket_num: 6,
     priority: 1,
-    status: 2,
+    status: 4,
     printer_num: 5,
+    type: 1,
     make_and_model: 5,
     location: null,
     created_on: "2024-10-24T18:09:10.190Z",
@@ -87,8 +91,9 @@ const testTickets = [
   {
     ticket_num: 7,
     priority: 1,
-    status: 2,
+    status: 4,
     printer_num: 2,
+    type: 1,
     make_and_model: 3,
     location: null,
     created_on: "2024-10-24T18:09:10.190Z",
@@ -97,72 +102,7 @@ const testTickets = [
     description: "Hello",
     dep_id: 1,
   },
-  {
-    ticket_num: 8,
-    priority: 1,
-    status: 2,
-    printer_num: 2,
-    make_and_model: 3,
-    location: null,
-    created_on: "2024-10-24T18:09:10.190Z",
-    name: ["admin", "Test Tech 1", "Human Resources"],
-    assigned_date: "2024-11-06T18:27:47.373Z",
-    description: "Hello",
-    dep_id: 1,
-  },
-  {
-    ticket_num: 9,
-    priority: 1,
-    status: 2,
-    printer_num: 2,
-    make_and_model: 3,
-    location: null,
-    created_on: "2024-10-24T18:09:10.190Z",
-    name: ["admin", "Test Tech 1", "Human Resources"],
-    assigned_date: "2024-11-06T18:27:47.373Z",
-    description: "hello",
-    dep_id: 1,
-  },
-  {
-    ticket_num: 10,
-    priority: 1,
-    status: 2,
-    printer_num: 2,
-    make_and_model: 3,
-    location: null,
-    created_on: "2024-10-24T18:09:10.190Z",
-    name: ["admin", "Test Tech 1", "Human Resources"],
-    assigned_date: "2024-11-06T18:27:47.373Z",
-    description: "Hello",
-    dep_id: 1,
-  },
-  {
-    ticket_num: 11,
-    priority: 1,
-    status: 2,
-    printer_num: 7,
-    make_and_model: 6,
-    location: null,
-    created_on: "2024-10-24T18:09:10.190Z",
-    name: ["admin", "Test Tech 2", "Human Resources"],
-    assigned_date: "2024-11-08T00:27:01.353Z",
-    description: "Printer is literally on fire and will explode shortly",
-    dep_id: 1,
-  },
-  {
-    ticket_num: 12,
-    priority: 1,
-    status: 1,
-    printer_num: 2,
-    make_and_model: 3,
-    location: null,
-    created_on: "2024-10-24T18:09:10.190Z",
-    name: ["admin", null, "Human Resources"],
-    assigned_date: null,
-    description: "Need toner",
-    dep_id: 1,
-  },
-  // Additional tickets are omitted for brevity.
+  // Add the rest of the objects here...
 ];
 
 export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
@@ -175,6 +115,8 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
   const [techs, setTechs] = useState([]);
   const [filterSettings, setFilterSettings] = useState({
     includeStatus: {
+      toner: true,
+      service: true,
       open: true,
       assigned: true,
       in_progress: true,
@@ -193,11 +135,12 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
   const setOneTicket = async (ticketNum, comments) => {
     //console.log("setOneTicket: \nTicketNum: ", ticketNum);
     //console.log("setOneTicket: \nComemnts: ", comments);
-    try
-    {
-      let result = await axios.post("/ticket/one_ticket", {ticket_num: ticketNum});
+    try {
+      let result = await axios.post("/ticket/one_ticket", {
+        ticket_num: ticketNum,
+      });
 
-      if (result.data.success == "yes"){
+      if (result.data.success == "yes") {
         let targetTicket = result.data.ticket;
         targetTicket = { ...targetTicket, comments: comments };
         let newTickets = myTickets.map((ticket) =>
@@ -208,7 +151,7 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
     } catch (err) {
       console.error(err);
     }
-  }
+  };
 
   const closeTicket = async (ticket, content, e) => {
     try {
@@ -325,9 +268,9 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
   };
 
   const sortTickets = async () => {
-    //console.log("FilterSettings in sortTickets: ", filterSettings);
+    console.log("FilterSettings in sortTickets: ", filterSettings);
     let outputArr = myTickets.map((ticket) => {
-      //console.log(ticket)
+      console.log("First Ticket Map (input): ", ticket);
       //Create an array with only the tickets to be shown based on the filter settings
       if (ticket.status == 1) {
         return filterSettings.includeStatus.open ? ticket : null;
@@ -339,6 +282,23 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
         return filterSettings.includeStatus.closed ? ticket : null;
       }
     });
+
+    console.log("First Ticket Map (Out): ", outputArr);
+
+    outputArr = outputArr.map((ticket) => {
+      console.log("Second Ticket Map (input): ", ticket);
+      if (ticket != null) {
+        if (ticket.type == 1) {
+          return filterSettings.includeStatus.toner ? ticket : null;
+        }
+
+        if (ticket.type == 2) {
+          return filterSettings.includeStatus.service ? ticket : null;
+        }
+      }
+    });
+
+    console.log("Second Ticket Map (Output): ", outputArr);
 
     outputArr = outputArr.filter((ticket) => {
       //console.log(ticket);
@@ -403,7 +363,7 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
   };
 
   const sortTicketsFilters = async (e) => {
-    //console.log("e: ", e.target);
+    console.log("e: ", e.target);
     const name = e.target.name;
     const checked = e.target.checked;
     await setFilterSettings({
@@ -472,7 +432,40 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
         >
           <Dropdown.Toggle id="dropdown-basic">Filter</Dropdown.Toggle>
           <Dropdown.Menu title="Hello there">
-            <Form.Label>Include:</Form.Label>
+            <Form.Label
+              style={{
+                margin: "8px",
+              }}
+            >
+              Include:
+            </Form.Label>
+            <div>
+              <Form.Check // prettier-ignore
+                type="switch"
+                id="toner_Ticket_Switch"
+                label="Toner Tickets"
+                name="toner"
+                onChange={sortTicketsFilters}
+                checked={filterSettings.includeStatus.toner}
+                style={{
+                  margin: "8px",
+                }}
+              />
+            </div>
+            <div>
+              <Form.Check // prettier-ignore
+                type="switch"
+                id="service_Ticket_Switch"
+                label="Service Tickets"
+                name="service"
+                onChange={sortTicketsFilters}
+                checked={filterSettings.includeStatus.service}
+                style={{
+                  margin: "8px",
+                }}
+              />
+            </div>
+            <Dropdown.Divider />
             <div>
               <Form.Check // prettier-ignore
                 type="switch"
@@ -521,7 +514,7 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
                 id="ascendingCreationDate"
                 label="Ascending Creation Date"
                 name="sortBy"
-                onChange={sortTicketsSorting} // Updated function
+                onChange={sortTicketsSorting}
                 checked={filterSettings.sortBy.ascendingCreationDate}
               />
               <Form.Check
@@ -529,7 +522,7 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
                 id="descendingCreationDate"
                 label="Descending Creation Date"
                 name="sortBy"
-                onChange={sortTicketsSorting} // Updated function
+                onChange={sortTicketsSorting}
                 checked={filterSettings.sortBy.descendingCreationDate}
               />
               <Form.Check
@@ -537,7 +530,7 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
                 id="ascendingAssignmentDate"
                 label="Ascending Assignment Date"
                 name="sortBy"
-                onChange={sortTicketsSorting} // Updated function
+                onChange={sortTicketsSorting}
                 checked={filterSettings.sortBy.ascendingAssignmentDate}
               />
               <Form.Check
@@ -545,7 +538,7 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
                 id="descendingAssignmentDate"
                 label="Descending Assignment Date"
                 name="sortBy"
-                onChange={sortTicketsSorting} // Updated function
+                onChange={sortTicketsSorting}
                 checked={filterSettings.sortBy.descendingAssignmentDate}
               />
               <Form.Check
@@ -553,7 +546,7 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
                 id="printerNumAscending"
                 label="Printer Number Ascending"
                 name="sortBy"
-                onChange={sortTicketsSorting} // Updated function
+                onChange={sortTicketsSorting}
                 checked={filterSettings.sortBy.printerNumAscending}
               />
               <Form.Check
@@ -561,7 +554,7 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
                 id="printerNumDescending"
                 label="Printer Number Descending"
                 name="sortBy"
-                onChange={sortTicketsSorting} // Updated function
+                onChange={sortTicketsSorting}
                 checked={filterSettings.sortBy.printerNumDescending}
               />
             </div>
@@ -583,7 +576,7 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
               <th>Created On</th>
               <th>Created By</th>
               <th>Assigned To</th>
-              <th>Assigned Date</th>
+              <th>Ticket Type</th>
               <th>Description</th>
             </tr>
           </thead>

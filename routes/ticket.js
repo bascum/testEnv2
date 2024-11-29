@@ -41,7 +41,7 @@ router.get("/dashboard/get_tickets", async (req, res) => {
             await request.input("department", sql.Int, req.session.employee.dep_num);
             if (req.session.employee.type == 1) {
                 result = await request.query(`
-                SELECT t.ticket_num, t.priority, t.status, t.printer_num, p.make_and_model, p.[location], t.created_on, u1.name, ta.assigned_date, u2.name, t.description, d.name, d.dep_id
+                SELECT t.ticket_num, t.priority, t.status, t.printer_num, t.type, p.make_and_model, p.[location], t.created_on, u1.name, ta.assigned_date, u2.name, t.description, d.name, d.dep_id
                 FROM Ticket t
                 LEFT JOIN [User] u1 ON t.created_by = u1.employee_id
                 LEFT JOIN Ticket_Assignment ta ON t.ticket_num = ta.ticket_num
@@ -58,7 +58,7 @@ router.get("/dashboard/get_tickets", async (req, res) => {
                 }
             } else if (req.session.employee.type == 2) { //Dep admins will need to see all tickets for their dep
                 let getDepTickets = `
-                SELECT t.ticket_num, t.priority, t.status, t.printer_num, p.make_and_model, p.[location], t.created_on, u1.name, ta.assigned_date, u2.name, t.description, d.name, d.dep_id
+                SELECT t.ticket_num, t.priority, t.status, t.printer_num, t.type, p.make_and_model, p.[location], t.created_on, u1.name, ta.assigned_date, u2.name, t.description, d.name, d.dep_id
                 FROM Ticket t
                 LEFT JOIN [User] u1 ON t.created_by = u1.employee_id
                 LEFT JOIN Ticket_Assignment ta ON t.ticket_num = ta.ticket_num
@@ -79,7 +79,7 @@ router.get("/dashboard/get_tickets", async (req, res) => {
 
             } else if (req.session.employee.type == 3) { //techs will need to see all tickets assigned to them
                 getAssignedTickets = `
-                SELECT t.ticket_num, t.priority, t.status, t.printer_num, p.make_and_model, p.[location], t.created_on, u1.name, ta.assigned_date, u2.name, t.description, d.name, d.dep_id
+                SELECT t.ticket_num, t.priority, t.status, t.printer_num, t.type, p.make_and_model, p.[location], t.created_on, u1.name, ta.assigned_date, u2.name, t.description, d.name, d.dep_id
                 FROM Ticket t
                 LEFT JOIN [User] u1 ON t.created_by = u1.employee_id
                 LEFT JOIN Ticket_Assignment ta ON t.ticket_num = ta.ticket_num
@@ -101,7 +101,7 @@ router.get("/dashboard/get_tickets", async (req, res) => {
                 //New front end view to sort
 
                 result = await request.query(`
-                SELECT t.ticket_num, t.priority, t.status, t.printer_num, p.make_and_model, p.[location], t.created_on, u1.name, ta.assigned_date, u2.name, t.description, d.name, d.dep_id
+                SELECT t.ticket_num, t.priority, t.status, t.printer_num, t.type, p.make_and_model, p.[location], t.created_on, u1.name, ta.assigned_date, u2.name, t.description, d.name, d.dep_id
                 FROM Ticket t
                 LEFT JOIN [User] u1 ON t.created_by = u1.employee_id
                 LEFT JOIN Ticket_Assignment ta ON t.ticket_num = ta.ticket_num
@@ -503,7 +503,7 @@ router.post("/one_ticket", async (req, res) => {
             await request.input("employee_name", sql.VarChar(50), req.session.employee.name);
             await request.input("ticket_num", sql.Int, req.body.ticket_num);
             await request.input("employee_id", sql.Int, req.session.employee.employee_id);
-            let ticket = await request.query(`                SELECT t.ticket_num, t.priority, t.status, t.printer_num, p.make_and_model, p.[location], t.created_on, u1.name, ta.assigned_date, u2.name, t.description, d.name, d.dep_id
+            let ticket = await request.query(`SELECT t.ticket_num, t.priority, t.status, t.printer_num, t.type, p.make_and_model, p.[location], t.created_on, u1.name, ta.assigned_date, u2.name, t.description, d.name, d.dep_id
             FROM Ticket t
             LEFT JOIN [User] u1 ON t.created_by = u1.employee_id
             LEFT JOIN Ticket_Assignment ta ON t.ticket_num = ta.ticket_num
