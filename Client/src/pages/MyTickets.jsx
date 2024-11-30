@@ -113,6 +113,14 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
   const [myTickets, setMyTickets] = useState([]);
   const [shownTickets, setShownTickets] = useState([]);
   const [techs, setTechs] = useState([]);
+  const [ticketText, setTicketText] = useState("Ticket #");
+  const [ticketNumberSearchToggle, setTicketNumberSearchToggle] =
+    useState(false);
+  const [ticketNumberSearchText, setTicketNumberSearchText] = useState("0");
+  const [printerNumText, setPrinterNumText] = useState("Printer #");
+  const [printerNumSearchToggle, setPrinterNumSearchToggle] = useState(false);
+  const [printerNumSearchText, setPrinterNumSearchText] = useState("0");
+  const [error, setError] = useState("");
   const [filterSettings, setFilterSettings] = useState({
     includeStatus: {
       toner: true,
@@ -237,6 +245,24 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
     }
   };
 
+  const handleTicketNumSearch = (e) => {
+    console.log("Handle Ticket Num Search: ", e.target);
+    e.preventDefault();
+    e.stopPropagation();
+
+    setTicketNumberSearchText(e.target.value);
+
+  };
+
+  const handlePrinterNumSearch = (e) => {
+    console.log("Handle Printer Num Search: ", e.target);
+    e.preventDefault();
+    e.stopPropagation();
+
+    setPrinterNumSearchText(e.target.value);
+
+  };
+
   const handleCommentSubmit = async (ticketNum, commentContent, e) => {
     //console.log("handleCommentSubmit");
     e.stopPropagation();
@@ -294,6 +320,52 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
 
         if (ticket.type == 2) {
           return filterSettings.includeStatus.service ? ticket : null;
+        }
+      }
+    });
+
+    outputArr = outputArr.map((ticket) => {
+      console.log("Ticket Num Search Filter in: ", ticket);
+      console.log("ticketNumSearch: ", ticketNumberSearchText);
+      if (ticket != null) {
+        if (ticketNumberSearchText != "0" && ticketNumberSearchText != 0) {
+          console.log("if statement running");
+          try {
+            let searchNum = parseInt(ticketNumberSearchText);
+            if (ticket.ticket_num == searchNum) {
+              return ticket;
+            } else {
+              return null;
+            }
+          } catch {
+            setError("Please only input numbers into the ticket number search");
+            return ticket;
+          }
+        } else if (ticketNumberSearchText == "0") {
+          return ticket;
+        }
+      }
+    });
+
+    outputArr = outputArr.map((ticket) => {
+      console.log("Printer Num Search Filter in: ", ticket);
+      if (ticket != null) {
+        if (printerNumSearchText != "0" && printerNumSearchText != 0) {
+          try {
+            let searchNum = parseInt(printerNumSearchText);
+            if (ticket.printer_num == searchNum) {
+              return ticket;
+            } else {
+              return null;
+            }
+          } catch {
+            setError(
+              "Please only input numbers into the printer number search"
+            );
+            return ticket;
+          }
+        } else if (printerNumSearchText == "0") {
+          return ticket;
         }
       }
     });
@@ -420,7 +492,8 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
     if (myTickets && myTickets.length > 0) {
       sortTickets();
     }
-  }, [myTickets, filterSettings]);
+  }, [myTickets, filterSettings, printerNumSearchText, ticketNumberSearchText]);
+
 
   return (
     <>
@@ -570,9 +643,70 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
         >
           <thead>
             <tr>
-              <th>Ticket #</th>
+              <th>
+                <div
+                  onClick={() => {
+                    if (!ticketNumberSearchToggle) {
+                      setTicketNumberSearchToggle(!ticketNumberSearchToggle);
+                    }
+                  }}
+                  onMouseEnter={() => {
+                    setTicketText("Click to Search");
+                  }}
+                  onMouseLeave={() => {
+                    setTicketText("Ticket #");
+                  }}
+                >
+                  {ticketNumberSearchToggle ? (
+                    <input
+                      type="number"
+                      placeholder="Enter Ticket Number"
+                      value={ticketNumberSearchText}
+                      onChange={handleTicketNumSearch}
+                      onBlur={() => {
+                        setTicketNumberSearchToggle(false);
+                        setTicketNumberSearchText("0");
+                      }}
+                      autoFocus
+                    />
+                  ) : (
+                    <>{ticketText}</>
+                  )}
+                </div>
+              </th>
+
               <th>Status</th>
-              <th>Printer Number</th>
+              <th>
+                <div
+                  onMouseEnter={() => {
+                    setPrinterNumText("Click to Search");
+                  }}
+                  onMouseLeave={() => {
+                    setPrinterNumText("Printer #");
+                  }}
+                  onClick={() => {
+                    if (!printerNumSearchToggle) {
+                      setPrinterNumSearchToggle(!printerNumSearchToggle);
+                    }
+                  }}
+                >
+                  {printerNumSearchToggle ? (
+                    <input
+                      type="number"
+                      placeholder="Enter Printer Number"
+                      value={printerNumSearchText}
+                      onChange={handlePrinterNumSearch}
+                      onBlur={() => {
+                        setPrinterNumSearchToggle(false);
+                        setPrinterNumSearchText("0");
+                      }}
+                      autoFocus
+                    />
+                  ) : (
+                    <>{printerNumText}</>
+                  )}
+                </div>
+              </th>
               <th>Created On</th>
               <th>Created By</th>
               <th>Assigned To</th>
