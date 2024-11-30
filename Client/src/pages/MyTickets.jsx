@@ -1,3 +1,4 @@
+import "../App.css";
 import React from "react";
 import Form from "react-bootstrap/Form";
 import { Header } from "../components/header/Header";
@@ -424,185 +425,185 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
 
   return (
     <>
-      <div className="body">
-        <Dropdown
-          style={{ marginLeft: "2.5%", marginBottom: "0" }}
-          title="This is main drop"
-          autoClose="outside"
-        >
-          <Dropdown.Toggle id="dropdown-basic">Filter</Dropdown.Toggle>
-          <Dropdown.Menu title="Hello there">
-            <Form.Label
-              style={{
-                margin: "8px",
-              }}
+      <div className="overflow-auto body">
+            <Dropdown
+              style={{ marginLeft: "2.5%", marginBottom: "0" }}
+              title="This is main drop"
+              autoClose="outside"
             >
-              Include:
-            </Form.Label>
-            <div>
-              <Form.Check // prettier-ignore
-                type="switch"
-                id="toner_Ticket_Switch"
-                label="Toner Tickets"
-                name="toner"
-                onChange={sortTicketsFilters}
-                checked={filterSettings.includeStatus.toner}
-                style={{
-                  margin: "8px",
-                }}
-              />
-            </div>
-            <div>
-              <Form.Check // prettier-ignore
-                type="switch"
-                id="service_Ticket_Switch"
-                label="Service Tickets"
-                name="service"
-                onChange={sortTicketsFilters}
-                checked={filterSettings.includeStatus.service}
-                style={{
-                  margin: "8px",
-                }}
-              />
-            </div>
-            <Dropdown.Divider />
-            <div>
-              <Form.Check // prettier-ignore
-                type="switch"
-                id="open_Ticket_Switch"
-                label="Open Tickets"
-                name="open"
-                onChange={sortTicketsFilters}
-                checked={filterSettings.includeStatus.open}
-                style={{
-                  margin: "8px",
-                }}
-              />
-            </div>
-            <div>
-              <Form.Check // prettier-ignore
-                type="switch"
-                id="assigned_Ticket_Switch"
-                label="Assigned Tickets"
-                name="assigned"
-                onChange={sortTicketsFilters}
-                checked={filterSettings.includeStatus.assigned}
-                value={filterSettings.includeStatus.assigned}
-                style={{
-                  margin: "8px",
-                }}
-              />
-            </div>
-            <div>
-              <Form.Check // prettier-ignore
-                type="switch"
-                id="in_progress_Ticket_Switch"
-                label="In-Progress Tickets"
-                name="in_progress"
-                onChange={sortTicketsFilters}
-                checked={filterSettings.includeStatus.in_progress}
-                style={{
-                  margin: "8px",
-                }}
-              />
-            </div>
-            <Dropdown.Divider />
-            <div style={{ padding: "8px" }}>
-              <Form.Label>Sort By:</Form.Label>
-              <Form.Check
-                type="radio"
-                id="ascendingCreationDate"
-                label="Ascending Creation Date"
-                name="sortBy"
-                onChange={sortTicketsSorting}
-                checked={filterSettings.sortBy.ascendingCreationDate}
-              />
-              <Form.Check
-                type="radio"
-                id="descendingCreationDate"
-                label="Descending Creation Date"
-                name="sortBy"
-                onChange={sortTicketsSorting}
-                checked={filterSettings.sortBy.descendingCreationDate}
-              />
-              <Form.Check
-                type="radio"
-                id="ascendingAssignmentDate"
-                label="Ascending Assignment Date"
-                name="sortBy"
-                onChange={sortTicketsSorting}
-                checked={filterSettings.sortBy.ascendingAssignmentDate}
-              />
-              <Form.Check
-                type="radio"
-                id="descendingAssignmentDate"
-                label="Descending Assignment Date"
-                name="sortBy"
-                onChange={sortTicketsSorting}
-                checked={filterSettings.sortBy.descendingAssignmentDate}
-              />
-              <Form.Check
-                type="radio"
-                id="printerNumAscending"
-                label="Printer Number Ascending"
-                name="sortBy"
-                onChange={sortTicketsSorting}
-                checked={filterSettings.sortBy.printerNumAscending}
-              />
-              <Form.Check
-                type="radio"
-                id="printerNumDescending"
-                label="Printer Number Descending"
-                name="sortBy"
-                onChange={sortTicketsSorting}
-                checked={filterSettings.sortBy.printerNumDescending}
-              />
-            </div>
-          </Dropdown.Menu>
-        </Dropdown>
-        <Table
-          striped
-          bordered
-          hover
-          responsive
-          className="mt-4 mx-auto"
-          style={{ maxWidth: "95%" }}
-        >
-          <thead>
-            <tr>
-              <th>Ticket #</th>
-              <th>Status</th>
-              <th>Printer Number</th>
-              <th>Created On</th>
-              <th>Created By</th>
-              <th>Assigned To</th>
-              <th>Ticket Type</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            {myTickets.length > 0 ? (
-              shownTickets.map((ticket, index) => {
-                return (
-                  <TicketRow
-                    ticket={ticket}
-                    index={index}
-                    currentUser={currentUser}
-                    techs={techs}
-                    onAssignment={(e) => onAssignment(ticket, e)}
-                    getComments={(e) => getComments(ticket.ticket_num, e)}
-                    handleCommentSubmit={handleCommentSubmit}
-                    setInProgress={setInProgress}
-                    closeTicket={closeTicket}
+              <Dropdown.Toggle id="dropdown-basic">Filter</Dropdown.Toggle>
+              <Dropdown.Menu title="Hello there">
+                <Form.Label
+                  style={{
+                    margin: "8px",
+                  }}
+                >
+                  Include:
+                </Form.Label>
+                <div>
+                  <Form.Check // prettier-ignore
+                    type="switch"
+                    id="toner_Ticket_Switch"
+                    label="Toner Tickets"
+                    name="toner"
+                    onChange={sortTicketsFilters}
+                    checked={filterSettings.includeStatus.toner}
+                    style={{
+                      margin: "8px",
+                    }}
                   />
-                );
-              })
-            ) : (
-              <></>
-            )}
-          </tbody>
-        </Table>
-      </div>
+                </div>
+                <div>
+                  <Form.Check // prettier-ignore
+                    type="switch"
+                    id="service_Ticket_Switch"
+                    label="Service Tickets"
+                    name="service"
+                    onChange={sortTicketsFilters}
+                    checked={filterSettings.includeStatus.service}
+                    style={{
+                      margin: "8px",
+                    }}
+                  />
+                </div>
+                <Dropdown.Divider />
+                <div>
+                  <Form.Check // prettier-ignore
+                    type="switch"
+                    id="open_Ticket_Switch"
+                    label="Open Tickets"
+                    name="open"
+                    onChange={sortTicketsFilters}
+                    checked={filterSettings.includeStatus.open}
+                    style={{
+                      margin: "8px",
+                    }}
+                  />
+                </div>
+                <div>
+                  <Form.Check // prettier-ignore
+                    type="switch"
+                    id="assigned_Ticket_Switch"
+                    label="Assigned Tickets"
+                    name="assigned"
+                    onChange={sortTicketsFilters}
+                    checked={filterSettings.includeStatus.assigned}
+                    value={filterSettings.includeStatus.assigned}
+                    style={{
+                      margin: "8px",
+                    }}
+                  />
+                </div>
+                <div>
+                  <Form.Check // prettier-ignore
+                    type="switch"
+                    id="in_progress_Ticket_Switch"
+                    label="In-Progress Tickets"
+                    name="in_progress"
+                    onChange={sortTicketsFilters}
+                    checked={filterSettings.includeStatus.in_progress}
+                    style={{
+                      margin: "8px",
+                    }}
+                  />
+                </div>
+                <Dropdown.Divider />
+                <div style={{ padding: "8px" }}>
+                  <Form.Label>Sort By:</Form.Label>
+                  <Form.Check
+                    type="radio"
+                    id="ascendingCreationDate"
+                    label="Ascending Creation Date"
+                    name="sortBy"
+                    onChange={sortTicketsSorting}
+                    checked={filterSettings.sortBy.ascendingCreationDate}
+                  />
+                  <Form.Check
+                    type="radio"
+                    id="descendingCreationDate"
+                    label="Descending Creation Date"
+                    name="sortBy"
+                    onChange={sortTicketsSorting}
+                    checked={filterSettings.sortBy.descendingCreationDate}
+                  />
+                  <Form.Check
+                    type="radio"
+                    id="ascendingAssignmentDate"
+                    label="Ascending Assignment Date"
+                    name="sortBy"
+                    onChange={sortTicketsSorting}
+                    checked={filterSettings.sortBy.ascendingAssignmentDate}
+                  />
+                  <Form.Check
+                    type="radio"
+                    id="descendingAssignmentDate"
+                    label="Descending Assignment Date"
+                    name="sortBy"
+                    onChange={sortTicketsSorting}
+                    checked={filterSettings.sortBy.descendingAssignmentDate}
+                  />
+                  <Form.Check
+                    type="radio"
+                    id="printerNumAscending"
+                    label="Printer Number Ascending"
+                    name="sortBy"
+                    onChange={sortTicketsSorting}
+                    checked={filterSettings.sortBy.printerNumAscending}
+                  />
+                  <Form.Check
+                    type="radio"
+                    id="printerNumDescending"
+                    label="Printer Number Descending"
+                    name="sortBy"
+                    onChange={sortTicketsSorting}
+                    checked={filterSettings.sortBy.printerNumDescending}
+                  />
+                </div>
+              </Dropdown.Menu>
+            </Dropdown>
+            <Table
+              striped
+              bordered
+              hover
+              responsive
+              className="mt-4 mx-auto"
+              style={{ maxWidth: "95%" }}
+            >
+              <thead>
+                <tr>
+                  <th>Ticket #</th>
+                  <th>Status</th>
+                  <th>Printer Number</th>
+                  <th>Created On</th>
+                  <th>Created By</th>
+                  <th>Assigned To</th>
+                  <th>Ticket Type</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                {myTickets.length > 0 ? (
+                  shownTickets.map((ticket, index) => {
+                    return (
+                      <TicketRow
+                        ticket={ticket}
+                        index={index}
+                        currentUser={currentUser}
+                        techs={techs}
+                        onAssignment={(e) => onAssignment(ticket, e)}
+                        getComments={(e) => getComments(ticket.ticket_num, e)}
+                        handleCommentSubmit={handleCommentSubmit}
+                        setInProgress={setInProgress}
+                        closeTicket={closeTicket}
+                      />
+                    );
+                  })
+                ) : (
+                  <></>
+                )}
+              </tbody>
+            </Table>
+          </div>
     </>
   );
 };

@@ -1,4 +1,4 @@
-import "./changepassword.css";
+import "../App.css";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -57,7 +57,7 @@ export function ChangePassword(props) {
 
   return (
     <>
-      <div className="form text-center">
+      <div className="body text-center">
         <div className="container text-center col-md-4 pt-5">
           <form>
             <div className="form-group mb-4">

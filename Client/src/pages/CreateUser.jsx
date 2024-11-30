@@ -1,3 +1,4 @@
+import "../App.css";
 import DropdownPrimary from "../components/dropdowns/DropdownPrimary";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";

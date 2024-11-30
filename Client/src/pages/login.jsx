@@ -1,4 +1,4 @@
-import "./login.css";
+import "../App.css";
 import LoginForm from "../components/forms/LoginForm";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
@@ -15,7 +15,7 @@ export function Login(props) {
 
   return (
     <>
-    <div className="login">
+    <div className="body">
       <div className="container text-center">
       <LoginForm
         toggleLogged={props.toggleLogged}
