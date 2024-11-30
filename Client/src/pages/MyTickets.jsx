@@ -1,4 +1,3 @@
-import "../App.css";
 import React from "react";
 import Form from "react-bootstrap/Form";
 import { Header } from "../components/header/Header";
@@ -114,6 +113,14 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
   const [myTickets, setMyTickets] = useState([]);
   const [shownTickets, setShownTickets] = useState([]);
   const [techs, setTechs] = useState([]);
+  const [ticketText, setTicketText] = useState("Ticket #");
+  const [ticketNumberSearchToggle, setTicketNumberSearchToggle] =
+    useState(false);
+  const [ticketNumberSearchText, setTicketNumberSearchText] = useState("0");
+  const [printerNumText, setPrinterNumText] = useState("Printer #");
+  const [printerNumSearchToggle, setPrinterNumSearchToggle] = useState(false);
+  const [printerNumSearchText, setPrinterNumSearchText] = useState("0");
+  const [error, setError] = useState("");
   const [filterSettings, setFilterSettings] = useState({
     includeStatus: {
       toner: true,
@@ -238,6 +245,24 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
     }
   };
 
+  const handleTicketNumSearch = (e) => {
+    console.log("Handle Ticket Num Search: ", e.target);
+    e.preventDefault();
+    e.stopPropagation();
+
+    setTicketNumberSearchText(e.target.value);
+
+  };
+
+  const handlePrinterNumSearch = (e) => {
+    console.log("Handle Printer Num Search: ", e.target);
+    e.preventDefault();
+    e.stopPropagation();
+
+    setPrinterNumSearchText(e.target.value);
+
+  };
+
   const handleCommentSubmit = async (ticketNum, commentContent, e) => {
     //console.log("handleCommentSubmit");
     e.stopPropagation();
@@ -295,6 +320,52 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
 
         if (ticket.type == 2) {
           return filterSettings.includeStatus.service ? ticket : null;
+        }
+      }
+    });
+
+    outputArr = outputArr.map((ticket) => {
+      console.log("Ticket Num Search Filter in: ", ticket);
+      console.log("ticketNumSearch: ", ticketNumberSearchText);
+      if (ticket != null) {
+        if (ticketNumberSearchText != "0" && ticketNumberSearchText != 0) {
+          console.log("if statement running");
+          try {
+            let searchNum = parseInt(ticketNumberSearchText);
+            if (ticket.ticket_num == searchNum) {
+              return ticket;
+            } else {
+              return null;
+            }
+          } catch {
+            setError("Please only input numbers into the ticket number search");
+            return ticket;
+          }
+        } else if (ticketNumberSearchText == "0") {
+          return ticket;
+        }
+      }
+    });
+
+    outputArr = outputArr.map((ticket) => {
+      console.log("Printer Num Search Filter in: ", ticket);
+      if (ticket != null) {
+        if (printerNumSearchText != "0" && printerNumSearchText != 0) {
+          try {
+            let searchNum = parseInt(printerNumSearchText);
+            if (ticket.printer_num == searchNum) {
+              return ticket;
+            } else {
+              return null;
+            }
+          } catch {
+            setError(
+              "Please only input numbers into the printer number search"
+            );
+            return ticket;
+          }
+        } else if (printerNumSearchText == "0") {
+          return ticket;
         }
       }
     });
@@ -421,189 +492,251 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
     if (myTickets && myTickets.length > 0) {
       sortTickets();
     }
-  }, [myTickets, filterSettings]);
+  }, [myTickets, filterSettings, printerNumSearchText, ticketNumberSearchText]);
+
 
   return (
     <>
-      <div className="overflow-auto body">
-            <Dropdown
-              style={{ marginLeft: "2.5%", marginBottom: "0" }}
-              title="This is main drop"
-              autoClose="outside"
+      <div className="body">
+        <Dropdown
+          style={{ marginLeft: "2.5%", marginBottom: "0" }}
+          title="This is main drop"
+          autoClose="outside"
+        >
+          <Dropdown.Toggle id="dropdown-basic">Filter</Dropdown.Toggle>
+          <Dropdown.Menu title="Hello there">
+            <Form.Label
+              style={{
+                margin: "8px",
+              }}
             >
-              <Dropdown.Toggle id="dropdown-basic">Filter</Dropdown.Toggle>
-              <Dropdown.Menu title="Hello there">
-                <Form.Label
-                  style={{
-                    margin: "8px",
+              Include:
+            </Form.Label>
+            <div>
+              <Form.Check // prettier-ignore
+                type="switch"
+                id="toner_Ticket_Switch"
+                label="Toner Tickets"
+                name="toner"
+                onChange={sortTicketsFilters}
+                checked={filterSettings.includeStatus.toner}
+                style={{
+                  margin: "8px",
+                }}
+              />
+            </div>
+            <div>
+              <Form.Check // prettier-ignore
+                type="switch"
+                id="service_Ticket_Switch"
+                label="Service Tickets"
+                name="service"
+                onChange={sortTicketsFilters}
+                checked={filterSettings.includeStatus.service}
+                style={{
+                  margin: "8px",
+                }}
+              />
+            </div>
+            <Dropdown.Divider />
+            <div>
+              <Form.Check // prettier-ignore
+                type="switch"
+                id="open_Ticket_Switch"
+                label="Open Tickets"
+                name="open"
+                onChange={sortTicketsFilters}
+                checked={filterSettings.includeStatus.open}
+                style={{
+                  margin: "8px",
+                }}
+              />
+            </div>
+            <div>
+              <Form.Check // prettier-ignore
+                type="switch"
+                id="assigned_Ticket_Switch"
+                label="Assigned Tickets"
+                name="assigned"
+                onChange={sortTicketsFilters}
+                checked={filterSettings.includeStatus.assigned}
+                value={filterSettings.includeStatus.assigned}
+                style={{
+                  margin: "8px",
+                }}
+              />
+            </div>
+            <div>
+              <Form.Check // prettier-ignore
+                type="switch"
+                id="in_progress_Ticket_Switch"
+                label="In-Progress Tickets"
+                name="in_progress"
+                onChange={sortTicketsFilters}
+                checked={filterSettings.includeStatus.in_progress}
+                style={{
+                  margin: "8px",
+                }}
+              />
+            </div>
+            <Dropdown.Divider />
+            <div style={{ padding: "8px" }}>
+              <Form.Label>Sort By:</Form.Label>
+              <Form.Check
+                type="radio"
+                id="ascendingCreationDate"
+                label="Ascending Creation Date"
+                name="sortBy"
+                onChange={sortTicketsSorting}
+                checked={filterSettings.sortBy.ascendingCreationDate}
+              />
+              <Form.Check
+                type="radio"
+                id="descendingCreationDate"
+                label="Descending Creation Date"
+                name="sortBy"
+                onChange={sortTicketsSorting}
+                checked={filterSettings.sortBy.descendingCreationDate}
+              />
+              <Form.Check
+                type="radio"
+                id="ascendingAssignmentDate"
+                label="Ascending Assignment Date"
+                name="sortBy"
+                onChange={sortTicketsSorting}
+                checked={filterSettings.sortBy.ascendingAssignmentDate}
+              />
+              <Form.Check
+                type="radio"
+                id="descendingAssignmentDate"
+                label="Descending Assignment Date"
+                name="sortBy"
+                onChange={sortTicketsSorting}
+                checked={filterSettings.sortBy.descendingAssignmentDate}
+              />
+              <Form.Check
+                type="radio"
+                id="printerNumAscending"
+                label="Printer Number Ascending"
+                name="sortBy"
+                onChange={sortTicketsSorting}
+                checked={filterSettings.sortBy.printerNumAscending}
+              />
+              <Form.Check
+                type="radio"
+                id="printerNumDescending"
+                label="Printer Number Descending"
+                name="sortBy"
+                onChange={sortTicketsSorting}
+                checked={filterSettings.sortBy.printerNumDescending}
+              />
+            </div>
+          </Dropdown.Menu>
+        </Dropdown>
+        <Table
+          striped
+          bordered
+          hover
+          responsive
+          className="mt-4 mx-auto"
+          style={{ maxWidth: "95%" }}
+        >
+          <thead>
+            <tr>
+              <th>
+                <div
+                  onClick={() => {
+                    if (!ticketNumberSearchToggle) {
+                      setTicketNumberSearchToggle(!ticketNumberSearchToggle);
+                    }
+                  }}
+                  onMouseEnter={() => {
+                    setTicketText("Click to Search");
+                  }}
+                  onMouseLeave={() => {
+                    setTicketText("Ticket #");
                   }}
                 >
-                  Include:
-                </Form.Label>
-                <div>
-                  <Form.Check // prettier-ignore
-                    type="switch"
-                    id="toner_Ticket_Switch"
-                    label="Toner Tickets"
-                    name="toner"
-                    onChange={sortTicketsFilters}
-                    checked={filterSettings.includeStatus.toner}
-                    style={{
-                      margin: "8px",
-                    }}
-                  />
+                  {ticketNumberSearchToggle ? (
+                    <input
+                      type="number"
+                      placeholder="Enter Ticket Number"
+                      value={ticketNumberSearchText}
+                      onChange={handleTicketNumSearch}
+                      onBlur={() => {
+                        setTicketNumberSearchToggle(false);
+                        setTicketNumberSearchText("0");
+                      }}
+                      autoFocus
+                    />
+                  ) : (
+                    <>{ticketText}</>
+                  )}
                 </div>
-                <div>
-                  <Form.Check // prettier-ignore
-                    type="switch"
-                    id="service_Ticket_Switch"
-                    label="Service Tickets"
-                    name="service"
-                    onChange={sortTicketsFilters}
-                    checked={filterSettings.includeStatus.service}
-                    style={{
-                      margin: "8px",
-                    }}
-                  />
+              </th>
+
+              <th>Status</th>
+              <th>
+                <div
+                  onMouseEnter={() => {
+                    setPrinterNumText("Click to Search");
+                  }}
+                  onMouseLeave={() => {
+                    setPrinterNumText("Printer #");
+                  }}
+                  onClick={() => {
+                    if (!printerNumSearchToggle) {
+                      setPrinterNumSearchToggle(!printerNumSearchToggle);
+                    }
+                  }}
+                >
+                  {printerNumSearchToggle ? (
+                    <input
+                      type="number"
+                      placeholder="Enter Printer Number"
+                      value={printerNumSearchText}
+                      onChange={handlePrinterNumSearch}
+                      onBlur={() => {
+                        setPrinterNumSearchToggle(false);
+                        setPrinterNumSearchText("0");
+                      }}
+                      autoFocus
+                    />
+                  ) : (
+                    <>{printerNumText}</>
+                  )}
                 </div>
-                <Dropdown.Divider />
-                <div>
-                  <Form.Check // prettier-ignore
-                    type="switch"
-                    id="open_Ticket_Switch"
-                    label="Open Tickets"
-                    name="open"
-                    onChange={sortTicketsFilters}
-                    checked={filterSettings.includeStatus.open}
-                    style={{
-                      margin: "8px",
-                    }}
+              </th>
+              <th>Created On</th>
+              <th>Created By</th>
+              <th>Assigned To</th>
+              <th>Ticket Type</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            {myTickets.length > 0 ? (
+              shownTickets.map((ticket, index) => {
+                return (
+                  <TicketRow
+                    ticket={ticket}
+                    index={index}
+                    currentUser={currentUser}
+                    techs={techs}
+                    onAssignment={(e) => onAssignment(ticket, e)}
+                    getComments={(e) => getComments(ticket.ticket_num, e)}
+                    handleCommentSubmit={handleCommentSubmit}
+                    setInProgress={setInProgress}
+                    closeTicket={closeTicket}
                   />
-                </div>
-                <div>
-                  <Form.Check // prettier-ignore
-                    type="switch"
-                    id="assigned_Ticket_Switch"
-                    label="Assigned Tickets"
-                    name="assigned"
-                    onChange={sortTicketsFilters}
-                    checked={filterSettings.includeStatus.assigned}
-                    value={filterSettings.includeStatus.assigned}
-                    style={{
-                      margin: "8px",
-                    }}
-                  />
-                </div>
-                <div>
-                  <Form.Check // prettier-ignore
-                    type="switch"
-                    id="in_progress_Ticket_Switch"
-                    label="In-Progress Tickets"
-                    name="in_progress"
-                    onChange={sortTicketsFilters}
-                    checked={filterSettings.includeStatus.in_progress}
-                    style={{
-                      margin: "8px",
-                    }}
-                  />
-                </div>
-                <Dropdown.Divider />
-                <div style={{ padding: "8px" }}>
-                  <Form.Label>Sort By:</Form.Label>
-                  <Form.Check
-                    type="radio"
-                    id="ascendingCreationDate"
-                    label="Ascending Creation Date"
-                    name="sortBy"
-                    onChange={sortTicketsSorting}
-                    checked={filterSettings.sortBy.ascendingCreationDate}
-                  />
-                  <Form.Check
-                    type="radio"
-                    id="descendingCreationDate"
-                    label="Descending Creation Date"
-                    name="sortBy"
-                    onChange={sortTicketsSorting}
-                    checked={filterSettings.sortBy.descendingCreationDate}
-                  />
-                  <Form.Check
-                    type="radio"
-                    id="ascendingAssignmentDate"
-                    label="Ascending Assignment Date"
-                    name="sortBy"
-                    onChange={sortTicketsSorting}
-                    checked={filterSettings.sortBy.ascendingAssignmentDate}
-                  />
-                  <Form.Check
-                    type="radio"
-                    id="descendingAssignmentDate"
-                    label="Descending Assignment Date"
-                    name="sortBy"
-                    onChange={sortTicketsSorting}
-                    checked={filterSettings.sortBy.descendingAssignmentDate}
-                  />
-                  <Form.Check
-                    type="radio"
-                    id="printerNumAscending"
-                    label="Printer Number Ascending"
-                    name="sortBy"
-                    onChange={sortTicketsSorting}
-                    checked={filterSettings.sortBy.printerNumAscending}
-                  />
-                  <Form.Check
-                    type="radio"
-                    id="printerNumDescending"
-                    label="Printer Number Descending"
-                    name="sortBy"
-                    onChange={sortTicketsSorting}
-                    checked={filterSettings.sortBy.printerNumDescending}
-                  />
-                </div>
-              </Dropdown.Menu>
-            </Dropdown>
-            <Table
-              striped
-              bordered
-              hover
-              responsive
-              className="mt-4 mx-auto"
-              style={{ maxWidth: "95%" }}
-            >
-              <thead>
-                <tr>
-                  <th>Ticket #</th>
-                  <th>Status</th>
-                  <th>Printer Number</th>
-                  <th>Created On</th>
-                  <th>Created By</th>
-                  <th>Assigned To</th>
-                  <th>Ticket Type</th>
-                  <th>Description</th>
-                </tr>
-              </thead>
-              <tbody>
-                {myTickets.length > 0 ? (
-                  shownTickets.map((ticket, index) => {
-                    return (
-                      <TicketRow
-                        ticket={ticket}
-                        index={index}
-                        currentUser={currentUser}
-                        techs={techs}
-                        onAssignment={(e) => onAssignment(ticket, e)}
-                        getComments={(e) => getComments(ticket.ticket_num, e)}
-                        handleCommentSubmit={handleCommentSubmit}
-                        setInProgress={setInProgress}
-                        closeTicket={closeTicket}
-                      />
-                    );
-                  })
-                ) : (
-                  <></>
-                )}
-              </tbody>
-            </Table>
-          </div>
+                );
+              })
+            ) : (
+              <></>
+            )}
+          </tbody>
+        </Table>
+      </div>
     </>
   );
 };
