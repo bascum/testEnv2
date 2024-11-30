@@ -1,3 +1,4 @@
+import "../App.css"
 import React from "react";
 import Form from "react-bootstrap/Form";
 import { Header } from "../components/header/Header";
@@ -497,7 +498,7 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
 
   return (
     <>
-      <div className="body">
+      <div className="overflow-auto body">
         <Dropdown
           style={{ marginLeft: "2.5%", marginBottom: "0" }}
           title="This is main drop"
