@@ -498,7 +498,7 @@ router.post("/one_ticket", async (req, res) => {
 
     let request = new sql.Request();
 
-    if (req.session.loggedIn && req.session.employee.type > 2) {
+    if (req.session.loggedIn) {
         try {
             await request.input("employee_name", sql.VarChar(50), req.session.employee.name);
             await request.input("ticket_num", sql.Int, req.body.ticket_num);

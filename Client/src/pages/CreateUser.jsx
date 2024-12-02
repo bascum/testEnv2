@@ -90,6 +90,10 @@ export const CreateUser = ({ setMessageOfTheDay, loggedIn }) => {
     }
   };
 
+  useEffect(() => {
+    getDeps();
+  },[])
+
   return (
     <div className="body">
       <div className="container">

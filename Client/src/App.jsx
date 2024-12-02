@@ -74,7 +74,7 @@ function App() {
         />
         <Route
           path="/changepassword"
-          element={<ChangePassword loggedIn={loggedIn} />}
+          element={<ChangePassword loggedIn={loggedIn} setMessageOfTheDay={setMessageOfTheDay}/>}
         />
         <Route
           path="/createuser"

@@ -12,24 +12,24 @@ export function ChangePassword(props) {
   const [confPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
 
-  // let navigate = useNavigate();
-  // useEffect(() => {
-  //   if (!props.loggedIn) {
-  //     return navigate("/");
-  //   }
-  // }, []);
+  let navigate = useNavigate();
+  useEffect(() => {
+    if (!props.loggedIn) {
+      return navigate("/");
+    }
+  }, []);
 
   const onUsernameChange = (e) => {
     setUsername(e.target.value);
-  }
+  };
 
   const onMainPasswordChange = (e) => {
     setPassword(e.target.value);
-  }
+  };
 
   const onConfPasswordChange = (e) => {
     setConfirmPassword(e.target.value);
-  }
+  };
 
   const onsubmit = async (e) => {
     e.preventDefault();
@@ -37,21 +37,24 @@ export function ChangePassword(props) {
       let body = {
         username: username,
         password: password,
-      }
+      };
       try {
-        let result = await axios.post("/user/reset_pass/admin", body);
+        let result = await axios.post("/user/reset_pass", body);
         console.log(result.data);
         if (result.data.success == "yes") {
-          props.setMessageOfTheDay(`Successfully changed password for user ${username}`);
-          return navigate("/")
+          props.setMessageOfTheDay(
+            `Successfully changed password for user ${username}`
+          );
+          return navigate("/");
         } else {
           setError(result.data.error);
         }
       } catch (error) {
+        //console.log(error);
         setError("post request appears to have failed");
       }
     }
-  }
+  };
 
   console.log(error);
 
@@ -61,7 +64,9 @@ export function ChangePassword(props) {
         <div className="container text-center col-md-4 pt-5">
           <form>
             <div className="form-group mb-4">
-              <label htmlFor="formGroupExampleInput">Enter Username for employee</label>
+              <label htmlFor="formGroupExampleInput">
+                Enter Username for employee
+              </label>
               <input
                 type="text"
                 className="shadow form-control"
@@ -98,14 +103,18 @@ export function ChangePassword(props) {
             <button className="btn btn-primary mt-3" onClick={onsubmit}>
               Submit
             </button>
-            {error != "" ? (<Alert key={'info'} variant={'info'}>
-              {error}
-            </Alert>) : <></>}
+            {error != "" ? (
+              <Alert key={"info"} variant={"info"}>
+                {error}
+              </Alert>
+            ) : (
+              <></>
+            )}
           </form>
         </div>
       </div>
     </>
   );
-};
+}
 
 export default ChangePassword;

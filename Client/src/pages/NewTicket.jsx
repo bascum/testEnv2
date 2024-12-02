@@ -26,6 +26,7 @@ export const NewTicket = (props) => {
 
   const [listOfPrinters, setListOfPrinters] = useState(testPrinters);
   const [listOfPrinterNums, setListOfPrinterNums] = useState([]);
+  const [printerSearch, setPrinterSearch] = useState(0);
   const [formData, setFormData] = useState({
     printer_num: "None",
     type: "",
@@ -42,7 +43,13 @@ export const NewTicket = (props) => {
   const makeListOfPrinterNums = (listOfPrintersTemp) => {
     let list = [];
     listOfPrintersTemp.map((printer) => {
-      list.push({ name: printer.inv_num, value: printer.inv_num });
+      if (printerSearch == 0) {
+        list.push({ name: printer.inv_num, value: printer.inv_num });
+      } else {
+        if (printer.inv_num == printerSearch) {
+          list.push({ name: printer.inv_num, value: printer.inv_num });
+        }
+      }
     });
     setListOfPrinterNums(list);
   };

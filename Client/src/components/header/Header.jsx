@@ -50,7 +50,10 @@ export const Header = (props) => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
-            <LinkContainer to="/" className={location.pathname === "/" ? "active" : ""}>
+            <LinkContainer
+              to="/"
+              className={location.pathname === "/" ? "active" : ""}
+            >
               <Nav.Link>Home</Nav.Link>
             </LinkContainer>
             {props.loggedIn ? (
@@ -58,7 +61,10 @@ export const Header = (props) => {
                 <Nav.Link>Log Out</Nav.Link>
               </LinkContainer>
             ) : (
-              <LinkContainer to="/login" className={location.pathname === "/login" ? "active" : ""}>
+              <LinkContainer
+                to="/login"
+                className={location.pathname === "/login" ? "active" : ""}
+              >
                 <Nav.Link>Login</Nav.Link>
               </LinkContainer>
             )}
@@ -66,18 +72,32 @@ export const Header = (props) => {
               <LinkContainer to="/myprofile">
                 <NavDropdown.Item>My profile</NavDropdown.Item>
               </LinkContainer>
-              <LinkContainer to="/changepassword">
-                <NavDropdown.Item>Reset password</NavDropdown.Item>
-              </LinkContainer>
+              {props.currentUser ? (
+                props.currentUser.type > 2 ? (
+                  <LinkContainer to="/changepassword">
+                    <NavDropdown.Item>Reset password</NavDropdown.Item>
+                  </LinkContainer>
+                ) : (
+                  <></>
+                )
+              ) : (
+                <></>
+              )}
               <NavDropdown.Divider />
               <LinkContainer to="/faq">
                 <NavDropdown.Item>FAQ</NavDropdown.Item>
               </LinkContainer>
-              {props.currentUser != null ? (props.currentUser.type > 2 ? (
-                <LinkContainer to="/createuser">
-                <NavDropdown.Item>Create User</NavDropdown.Item>
-              </LinkContainer>
-              ) : (<></>)) : (<></>)}
+              {props.currentUser != null ? (
+                props.currentUser.type > 2 ? (
+                  <LinkContainer to="/createuser">
+                    <NavDropdown.Item>Create User</NavDropdown.Item>
+                  </LinkContainer>
+                ) : (
+                  <></>
+                )
+              ) : (
+                <></>
+              )}
             </NavDropdown>
           </Nav>
         </Navbar.Collapse>

@@ -152,6 +152,7 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
       if (result.data.success == "yes") {
         let targetTicket = result.data.ticket;
         targetTicket = { ...targetTicket, comments: comments };
+        //console.log("TargetTicket: ", targetTicket);
         let newTickets = myTickets.map((ticket) =>
           ticket.ticket_num == targetTicket.ticket_num ? targetTicket : ticket
         );
@@ -295,9 +296,9 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
   };
 
   const sortTickets = async () => {
-    console.log("FilterSettings in sortTickets: ", filterSettings);
+    //console.log("FilterSettings in sortTickets: ", filterSettings);
     let outputArr = myTickets.map((ticket) => {
-      console.log("First Ticket Map (input): ", ticket);
+      //console.log("First Ticket Map (input): ", ticket);
       //Create an array with only the tickets to be shown based on the filter settings
       if (ticket.status == 1) {
         return filterSettings.includeStatus.open ? ticket : null;
@@ -310,10 +311,10 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
       }
     });
 
-    console.log("First Ticket Map (Out): ", outputArr);
+    //console.log("First Ticket Map (Out): ", outputArr);
 
     outputArr = outputArr.map((ticket) => {
-      console.log("Second Ticket Map (input): ", ticket);
+      //console.log("Second Ticket Map (input): ", ticket);
       if (ticket != null) {
         if (ticket.type == 1) {
           return filterSettings.includeStatus.toner ? ticket : null;
@@ -326,11 +327,11 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
     });
 
     outputArr = outputArr.map((ticket) => {
-      console.log("Ticket Num Search Filter in: ", ticket);
-      console.log("ticketNumSearch: ", ticketNumberSearchText);
+      //console.log("Ticket Num Search Filter in: ", ticket);
+      //console.log("ticketNumSearch: ", ticketNumberSearchText);
       if (ticket != null) {
         if (ticketNumberSearchText != "0" && ticketNumberSearchText != 0) {
-          console.log("if statement running");
+          //console.log("if statement running");
           try {
             let searchNum = parseInt(ticketNumberSearchText);
             if (ticket.ticket_num == searchNum) {
@@ -349,7 +350,7 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
     });
 
     outputArr = outputArr.map((ticket) => {
-      console.log("Printer Num Search Filter in: ", ticket);
+      //console.log("Printer Num Search Filter in: ", ticket);
       if (ticket != null) {
         if (printerNumSearchText != "0" && printerNumSearchText != 0) {
           try {
@@ -371,7 +372,7 @@ export const MyTickets = ({ setMessageOfTheDay, currentUser }) => {
       }
     });
 
-    console.log("Second Ticket Map (Output): ", outputArr);
+    //console.log("Second Ticket Map (Output): ", outputArr);
 
     outputArr = outputArr.filter((ticket) => {
       //console.log(ticket);
