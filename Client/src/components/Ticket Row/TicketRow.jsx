@@ -61,7 +61,6 @@ export const TicketRow = ({
       //console.log("Ticket: ", ticket);
     });
 
-
     return (
       <>
         {ticket == undefined ? (
@@ -173,13 +172,14 @@ export const TicketRow = ({
                         />
                         <button
                           className="btn btn-primary"
-                          onClick={(e) =>
+                          onClick={(e) => {
                             handleCommentSubmit(
                               ticket.ticket_num,
                               commentContent,
                               e
-                            )
-                          }
+                            );
+                            setCommentContent("");
+                          }}
                         >
                           Submit
                         </button>

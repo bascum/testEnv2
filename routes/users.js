@@ -221,16 +221,16 @@ router.post("/login", async (req, res) => {
   }
   try {
     if (await bcrypt.compare(req.body.password, resultUser.password)) {
-      console.log((bcrypt.compare(resultUser.password, req.body.password)))
+      //console.log((bcrypt.compare(resultUser.password, req.body.password)))
       req.session.employee = resultUser;
       req.session.loggedIn = true;
-      console.log("logged in successfully???")
+      //console.log("logged in successfully???")
     }
     else {
       genericError = true
     }
   } catch (err) {
-    console.log(err, "\n\nsomething failed in second try");
+    console.log(err, "\n\nUnable to match password");
     genericError = true;
   }
 

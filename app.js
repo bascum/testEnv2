@@ -12,8 +12,8 @@ const { connect, config } = require("./db.js");
 
 
 //Routes
-const indexRoute = require("./routes/index");
-const upRoute = require("./routes/up");
+const indexRoute = require("./routes/index"); //Testing
+const upRoute = require("./routes/up"); // Testing
 const userRoute = require("./routes/users");
 const ticketRoute = require("./routes/ticket");
 const printerRoute = require("./routes/printer");
